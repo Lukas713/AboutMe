@@ -1,21 +1,39 @@
 <?php
 namespace App\Controllers;
+
 use \Core\View;
 use App\Models\Posts;
+
 class Post extends \Core\Controller {
+
     /* show the index page
         @return void
     */
     public function index(){
-        View::render('Post/index.html');
+        $result = Posts::getAll(); //invoke Models action
+        View::render('Post/index.html', [
+            'posts' => $result
+        ]);
     }
+
+    /*add new page
+        @return void
+    */
+    public function add(){
+        View::render('Post/add.html');
+
+        if(isset($_POST['submit'])){
+            //check input
+            Posts::addNew($_POST);
+        }
+    }
+
+
     /*
-     * show addNew page
+     * open change page
+     * @param id
      * @return void
      * */
-    public function addNew(){
-        echo 'Hello World, I am addNew() action inside Post controller';
-    }
     public function edit() {
         echo 'Hello World, I am edit() action inside Post controller and my parameters are: ';
         echo '<hr>';
