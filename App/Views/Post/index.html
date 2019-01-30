@@ -14,13 +14,13 @@
 <div class="container" style="font-size: large;">
     {% for post in posts %}
     <div class="row justify-content-md-center">
-        <div class="col col-md-8" style="text-align:center;">
+        <div class="col col-md-8" style="text-align:center; margin-top: 1rem;">
             <div class="card">
                 <h5 class="card-header"><b>Title:</b> {{post.title}}</h5>
                 <div class="card-body">
                     <h5 class="card-title"><b>Branch of business:</b> {{post.branch}}</h5>
                     <p class="card-text"><b>Description:</b> {{post.description}}</p><hr>
-                    <a href="{{post.link}}" class="btn btn-primary">Check live</a> <a href="" class="btn btn-success">Change</a>
+                    <a href="{{post.link}}" class="btn btn-primary">Check live</a> <a href="/post/edit/{{post.id}}" class="btn btn-success">Change</a>
                 </div>
             </div>
         </div>

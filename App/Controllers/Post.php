@@ -11,6 +11,7 @@ class Post extends \Core\Controller {
     */
     public function index(){
         $result = Posts::getAll(); //invoke Models action
+
         View::render('Post/index.html', [
             'posts' => $result
         ]);
@@ -25,21 +26,34 @@ class Post extends \Core\Controller {
         if(isset($_POST['submit'])){
             //check input
             Posts::addNew($_POST);
+            $_POST = array();
+
+            header("location: /post/index");
         }
     }
 
-
-    /*
-     * open change page
-     * @param id
+    /*loads page for editing record
+     *
      * @return void
      * */
     public function edit() {
-        echo 'Hello World, I am edit() action inside Post controller and my parameters are: ';
-        echo '<hr>';
-        print_r($this->routeParams);
-        echo '<hr>';
+        $result = Posts::load($this->routeParams['id']);    //invoke load() method from Model
+
+        View::render('Post/edit.html', [
+           'infos' => $result
+        ]);
+
+        if(isset($_POST['submit'])){
+            //check input
+            Posts::edit($_POST);
+            $_POST = array();
+
+            header("location: /Post/index");
+        }
+
     }
+
+
     protected function before()
     {
         echo 'I am invoked before' . '<hr>';
