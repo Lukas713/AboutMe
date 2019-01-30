@@ -12,5 +12,5 @@ class Config {
 
     const DB_NAME = 'aboutLukas';
 
-    const SHOW_ERRORS = false;
+    const SHOW_ERRORS = true;
 }

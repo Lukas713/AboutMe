@@ -24,11 +24,14 @@ class Post extends \Core\Controller {
         View::render('Post/add.html');
 
         if(isset($_POST['submit'])){
-            //check input
-            Posts::addNew($_POST);
-            $_POST = array();
+            $post_m = new Posts($_POST);    //instantiate model object
 
-            header("location: /post/index");
+            if(!$post_m->addNew()){ //invoke model's method
+                echo '<p style="color:red;">Record with that title already exists</p>';
+            }else {
+                header("location: /post/index");
+            }
+            $_POST = array();
         }
     }
 
@@ -37,20 +40,19 @@ class Post extends \Core\Controller {
      * @return void
      * */
     public function edit() {
-        $result = Posts::load($this->routeParams['id']);    //invoke load() method from Model
+        $result = Posts::load($this->routeParams['id']); //invoke load() method from Model
 
         View::render('Post/edit.html', [
            'infos' => $result
         ]);
 
         if(isset($_POST['submit'])){
-            //check input
-            Posts::edit($_POST);
+            $post_m = new Posts($_POST);
+            $post_m->edit();
+
+            header("location: /post/index");
             $_POST = array();
-
-            header("location: /Post/index");
         }
-
     }
 
 

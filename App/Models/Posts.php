@@ -13,10 +13,15 @@ use PDO;
 
 class Posts extends \Core\Model
 {
+    public function __construct($params)
+    {
+        foreach($params as $key => $value){
+            $this->$key = $value;
+        }
+    }
 
     /*selects all record from database
-
-    @return assoc array
+    @return array
     */
     public static function getAll(){
         try {
@@ -26,7 +31,6 @@ class Posts extends \Core\Model
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $result;
-
         }catch(\PDOException $e){
             echo $e->getMessage();
         }
@@ -34,25 +38,23 @@ class Posts extends \Core\Model
 
     /*inserts new record into database
         @param assoc array, POST array of input values
-        @return void
+        @return bool
     */
-    public static function addNew($params = []){
+    public function addNew(){
         try {
-            //check input
-            if(!self::recordExist($params['title'])){
-
+            if(!$this->recordExist($this->title)){
                 $conn = static::connect();
                 $stmt = $conn->prepare("INSERT into project (id, title, branch, link, description) 
                                              VALUES (null, :title, :branch, :link, :description)");
                 $stmt->execute(array(
-                    "title" => $params['title'],
-                    "branch" => $params['branch'],
-                    "link" => $params['link'],
-                    "description" => $params['description']
+                    "title" => $this->title,
+                    "branch" => $this->branch,
+                    "link" => $this->link,
+                    "description" => $this->description
                 ));
-                return;
+                return true;
             }
-            echo 'error, već postoji';
+            return false;
         }catch(\PDOException $e){
             echo $e->getMessage();
         }
@@ -61,19 +63,19 @@ class Posts extends \Core\Model
     /*change records inside database
 
     @param assoc array, $_POST array with input fields
-    @return void
+    @return bool
     */
-    public static function edit($params = []){
+    public function edit(){
         $conn = static::connect();
 
         $stmt = $conn->prepare("UPDATE project SET title = :title, branch = :branch, link = :link, 
                             description = :description where id = :id");
         $stmt->execute(array(
-            "title" => $params['title'],
-            "branch" => $params['branch'],
-            "link" => $params['link'],
-            "description" => $params['description'],
-            "id" => $params['id']
+            "title" => $this->title,
+            "branch" => $this->branch,
+            "link" => $this->link,
+            "description" => $this->description,
+            "id" => $this->id
         ));
     }
 
@@ -92,25 +94,22 @@ class Posts extends \Core\Model
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $result;
-
         }catch(\PDOException $e){
             echo $e->getMessage();
         }
     }
-
 
     /*method that checks if record with same title already exists
 
     @param string, Record title
     @return bool
     */
-    protected static function recordExist($title){
+    protected function recordExist($title){
         $conn = static::connect();
 
         $stmt = $conn->prepare("SELECT id from project where title = :title");
         $stmt->bindValue(":title", $title, PDO::PARAM_STR);
         $stmt->execute();
-
         if($stmt->rowCount() == 0){ //record does not exists
             return false;
         }
