@@ -13,6 +13,12 @@ create table project
     description text not null
   );
 
+create table user (
+  id int not null primary key auto_increment,
+  email varchar(100) not null,
+  password varchar(255) not null
+);
+
 insert into project (id, title, branch, link, description) values
 (null, 'BroomCall', 'Cleaning service', 'http://lukas713.byethost17.com/bootstrapBroomCall/', 'BroomCall is a web application that solves many problems to company that
 has cleaning services as main priority. It basicaly web page with all the informations
