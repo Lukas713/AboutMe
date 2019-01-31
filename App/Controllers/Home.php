@@ -1,10 +1,17 @@
 <?php
+
 namespace App\Controllers;
 use \Core\View;
+
+/*
+ * Home controller that renders front page
+ */
 class Home extends \Core\Controller {
-    /* show index page inside controller
-    @return void
-    */
+
+    /*
+     * renders index page
+     * @return void
+     */
     public function index(){
         View::render('Home/index.html');
     }

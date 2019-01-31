@@ -11,22 +11,29 @@ namespace App\Models;
 use mysql_xdevapi\Exception;
 use PDO;
 
+/*
+ * User model that talks with the database
+ */
 class Users extends \Core\Model
 {
+    /*
+     * @var array that holds errors (if any)
+     */
     public $errors = [];
 
-
-    /*constructs model's object
-        @param array
-    */
+    /*
+     * init objects properties
+     */
     public function __construct($params)
     {
         foreach($params as $key => $value){
             $this->$key = $value;
         }
     }
-    /* inserts user data into database
-     *  @return bool
+
+    /*
+     * inserts user data into database
+     * @return bool
      */
     public function save(){
 
@@ -47,14 +54,14 @@ class Users extends \Core\Model
     /*
      * validate inputs
      * @return void
-    */
+     */
     protected function validate(){
         //validate email
         if(filter_var($this->email, FILTER_VALIDATE_EMAIL) === false){
             $this->errors[] = 'Invalid email';
         }
 
-        //validate if email is taken
+        //validate if email is already taken
         if($this->emailExists($this->email)){
             $this->errors[] = 'Email is already in use';
         }
@@ -83,7 +90,7 @@ class Users extends \Core\Model
     /*
      * check if email is already in use
      * @return bool
-    */
+     */
     protected function emailExists($email){
         $conn = static::connect();
 

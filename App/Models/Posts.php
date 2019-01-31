@@ -11,8 +11,14 @@ namespace App\Models;
 use mysql_xdevapi\Exception;
 use PDO;
 
+/*
+ * Post model that operates on database
+ */
 class Posts extends \Core\Model
 {
+    /*
+     * init properties with input values from $_POST
+     */
     public function __construct($params)
     {
         foreach($params as $key => $value){
@@ -20,9 +26,10 @@ class Posts extends \Core\Model
         }
     }
 
-    /*selects all record from database
-    @return array
-    */
+    /*
+     * fetch all projects from database
+     * @return array
+     */
     public static function getAll(){
         try {
             $conn = static::connect();
@@ -36,22 +43,21 @@ class Posts extends \Core\Model
         }
     }
 
-    /*inserts new record into database
-        @param assoc array, POST array of input values
-        @return bool
-    */
-    public function addNew(){
+    /*
+     * inserts record into database
+     * @return bool
+     */
+    public function insert(){
         try {
-            if(!$this->recordExist($this->title)){
+            if(!$this->projectExist($this->title)){  //invoke method that checks if record exists
                 $conn = static::connect();
+
                 $stmt = $conn->prepare("INSERT into project (id, title, branch, link, description) 
                                              VALUES (null, :title, :branch, :link, :description)");
-                $stmt->execute(array(
-                    "title" => $this->title,
-                    "branch" => $this->branch,
-                    "link" => $this->link,
-                    "description" => $this->description
-                ));
+                $stmt->bindValue("title", $this->title, PDO::PARAM_STR);
+                $stmt->bindValue("branch", $this->branch, PDO::PARAM_STR);
+                $stmt->bindValue("link", $this->link, PDO::PARAM_STR);
+                $stmt->bindValue("description", $this->description, PDO::PARAM_STR);
                 return true;
             }
             return false;
@@ -60,34 +66,34 @@ class Posts extends \Core\Model
         }
     }
 
-    /*change records inside database
+    /*
+     * update record inside database
+     * @return void
+     */
+    public function update(){
+        try {
+            $conn = static::connect();
+            $stmt = $conn->prepare("UPDATE project SET title = :title, branch = :branch, link = :link, 
+                                            description = :description where id = :id");
+            $stmt->bindValue("title", $this->title, PDO::PARAM_STR);
+            $stmt->bindValue("branch", $this->branch, PDO::PARAM_STR);
+            $stmt->bindValue("link", $this->link, PDO::PARAM_STR);
+            $stmt->bindValue("description", $this->description, PDO::PARAM_STR);
+            $stmt->bindValue("id", $this->id, PDO::PARAM_STR);
 
-    @param assoc array, $_POST array with input fields
-    @return bool
-    */
-    public function edit(){
-        $conn = static::connect();
-
-        $stmt = $conn->prepare("UPDATE project SET title = :title, branch = :branch, link = :link, 
-                            description = :description where id = :id");
-        $stmt->execute(array(
-            "title" => $this->title,
-            "branch" => $this->branch,
-            "link" => $this->link,
-            "description" => $this->description,
-            "id" => $this->id
-        ));
+            $stmt->execute();
+        }catch(\PDOException $e){
+            echo $e->getMessage();
+        }
     }
 
-    /*load project information
-
-    @param int, project ID
-    @return void
-    */
+    /*
+     * get the result with id from parameter
+     * @return array
+     */
     public static function load($id){
         try{
             $conn = static::connect();
-
             $stmt = $conn->prepare("SELECT * FROM project where id = :id");
             $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
@@ -99,12 +105,11 @@ class Posts extends \Core\Model
         }
     }
 
-    /*method that checks if record with same title already exists
-
-    @param string, Record title
-    @return bool
-    */
-    protected function recordExist($title){
+    /*
+     * checks if project with title as argument exists
+     * @return bool
+     */
+    protected function projectExist($title){
         $conn = static::connect();
 
         $stmt = $conn->prepare("SELECT id from project where title = :title");
