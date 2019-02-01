@@ -38,7 +38,9 @@ class Post extends \Core\Controller {
             $post_m = new Posts($_POST);    //instantiate model object
 
             if(!$post_m->insert()){ //invoke model's method
-                echo '<p style="color:red;">Record with that title already exists</p>';
+                View::render('Post/add.html', [
+                    "admin" => $post_m
+                ]);
                 return;
             }
             $_POST = array();
@@ -65,8 +67,10 @@ class Post extends \Core\Controller {
     public function update(){
         if(isset($_POST['submit'])){
             $post_m = new Posts($_POST);
-            $post_m->update();
 
+            if(!$post_m->update()){
+                exit(header("location: http://" . $_SERVER['HTTP_HOST'] . '/post/edit/' . $post_m->id, true, 303));
+            }
             exit(header("location: http://" . $_SERVER['HTTP_HOST'] . '/post/success', true, 303));
         }
         exit(header("location: http://" . $_SERVER['HTTP_HOST'] . '/post/index', true, 303));

@@ -17,6 +17,11 @@ use PDO;
 class Posts extends \Core\Model
 {
     /*
+     * @var that holds error texts if any
+     */
+    public $errors = [];
+
+    /*
      * init properties with input values from $_POST
      */
     public function __construct($params)
@@ -49,9 +54,13 @@ class Posts extends \Core\Model
      */
     public function insert(){
         try {
+            $this->validate();
+            if(!empty($this->errors)){
+                return false;
+            }
+
             if(!$this->projectExist($this->title)){  //invoke method that checks if record exists
                 $conn = static::connect();
-
                 $stmt = $conn->prepare("INSERT into project (id, title, branch, link, description) 
                                              VALUES (null, :title, :branch, :link, :description)");
                 $stmt->bindValue("title", $this->title, PDO::PARAM_STR);
@@ -68,10 +77,14 @@ class Posts extends \Core\Model
 
     /*
      * update record inside database
-     * @return void
+     * @return bool
      */
     public function update(){
         try {
+            $this->validate();
+            if(!empty($this->errors)){
+                return false;
+            }
             $conn = static::connect();
             $stmt = $conn->prepare("UPDATE project SET title = :title, branch = :branch, link = :link, 
                                             description = :description where id = :id");
@@ -81,7 +94,7 @@ class Posts extends \Core\Model
             $stmt->bindValue("description", $this->description, PDO::PARAM_STR);
             $stmt->bindValue("id", $this->id, PDO::PARAM_STR);
 
-            $stmt->execute();
+            return $stmt->execute();
         }catch(\PDOException $e){
             echo $e->getMessage();
         }
@@ -119,5 +132,28 @@ class Posts extends \Core\Model
             return false;
         }
         return true;
+    }
+
+    /*
+     * validates inputs from form for adding new project
+     * @return void
+     */
+    protected function validate(){
+
+        if($this->title == ''){
+            $this->errors[] = 'Title can\'t be empty string';
+        }
+
+        if($this->branch == ''){
+            $this->errors[] = 'Branch can\'t be empty string';
+        }
+
+        if(filter_var($this->link, FILTER_VALIDATE_URL) === false){
+            $this->errors[] = 'URL is not valid';
+        }
+
+        if(strlen($this->description) > 800){
+            $this->errors[] = 'Description must have maximum 800 characters';
+        }
     }
 }

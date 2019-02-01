@@ -40,7 +40,7 @@ class Signup extends \Core\Controller
             }
             exit(header('location: http://' . $_SERVER['HTTP_HOST'] . '/signup/success', true, 303));
         }
-        exit(header('location: http://' . $_SERVER['HTTP_HOST'] . '/signup/index', true, 303));
+        exit(header('location: http://' . $_SERVER['HTTP_HOST'] . '/signup/registration', true, 303));
     }
 
     /*

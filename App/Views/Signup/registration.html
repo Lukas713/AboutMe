@@ -2,16 +2,39 @@
 
 {% block title %}Signup{% endblock %}
 
+{% block footer %}
+<script>
+    $(document).ready(function(){
+        $("#formSignup").validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                },
+                password:{
+                    required: true,
+                    minlength: 6
+                },
+                password_repeat:{
+                    equalTo: '#password'
+                }
+            },
+            errorClass: "is-invalid"
+        });
+    });
+</script>
+{% endblock %}
+
 {% block body %}
 
 <div class="container" style="margin-top: 1rem; margin-bottom: 1rem;">
     <div class="row justify-content-md-center">
         <div class="col col-md-8">
             <h2>Signup</h2><hr>
-            <form method="post" action="/signup/create">
+            <form method="post" action="/signup/create" id="formSignup">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{user.email}}">
+                    <input type="text" class="form-control" id="email" name="email" value="{{user.email}}">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -37,3 +60,5 @@
 </div>
 {% endif %}
 {% endblock %}
+
+
