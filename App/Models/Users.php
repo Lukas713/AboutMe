@@ -71,11 +71,6 @@ class Users extends \Core\Model
             $this->errors[] = 'Password must have at least 6 characters';
         }
 
-        //validate repeated password
-        if($this->password != $this->password_repeat){
-            $this->errors[] = 'Password and repeated password must match';
-        }
-
         //validate password: letters
         if(preg_match('/.*[a-z]+.*/i', $this->password) == 0){
             $this->errors[] = 'Passwords must contains at least one letter';

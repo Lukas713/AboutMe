@@ -3,6 +3,7 @@
 {% block title %}Signup{% endblock %}
 
 {% block footer %}
+<script src="/js/hideShowPassword.min.js"></script>
 <script>
     $(document).ready(function(){
         $("#formSignup").validate({
@@ -14,15 +15,22 @@
                 password:{
                     required: true,
                     minlength: 6
-                },
-                password_repeat:{
-                    equalTo: '#password'
                 }
             },
             errorClass: "is-invalid"
         });
+
+        /*
+         * show password toggle button
+         */
+        $('#password').hideShowPassword({
+            show: false,
+            innerToggle: 'focus'
+        });
     });
+
 </script>
+
 {% endblock %}
 
 {% block body %}
@@ -39,10 +47,6 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password">
-                </div>
-                <div class="form-group">
-                    <label for="password_repeat">Repeat password</label>
-                    <input type="password" class="form-control" id="password_repeat" name="password_repeat">
                 </div>
                 <input type="submit" class="btn btn-primary" value="Submit" name="submit">
                 <a href="/post/index" class="btn btn-danger">Cancel</a>

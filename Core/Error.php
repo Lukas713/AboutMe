@@ -11,22 +11,22 @@ namespace Core;
 class Error
 {
     /*
-        Error handler. Convert all errors to Exceptions by throwing the ErrorException object
-        @param int $level, Error level
-        @param string $message, Error message
-        @param string $file, Filename the error was raised in
-        @param int $line, Line number in the file
-    */
+     *  Error handler. Convert all errors to Exceptions by throwing the ErrorException object
+     *  @param int $level, Error level
+     *  @param string $message, Error message
+     *  @param string $file, Filename the error was raised in
+     *  @param int $line, Line number in the file
+     */
     public static function errorHandler($level, $message, $file, $line){
         if(error_reporting() !== 0){
             throw new \ErrorException($message, 0, $level, $file, $line);
         }
     }
     /*
-        Exception handler.
-        @param Exception $exception, The exception
-        return @void
-    */
+     * Exception handler.
+     * @param Exception $exception, The exception
+     * @return void
+     */
     public static function exceptionHandler($exception){
         $code = $exception->getCode();
         if($code != 404){
@@ -43,7 +43,7 @@ class Error
                 . ' on line: ' . $exception->getLine() . '</p>';
         }else {
             $log = dirname(__DIR__) . '/logs/' . date('Y-m-d') . '.txt';   //take path to logs
-            ini_set('error_log', $log); //sets destination of error_log
+            ini_set('error_log', $log); //sets destination of error_log (change php settings)
             //create message
             $message = 'Uncaught exception ' . get_class($exception);
             $message .= ' with message ' . $exception->getMessage();
