@@ -24,7 +24,7 @@ class Users extends \Core\Model
     /*
      * init objects properties
      */
-    public function __construct($params)
+    public function __construct($params = [])
     {
         foreach($params as $key => $value){
             $this->$key = $value;
@@ -84,18 +84,46 @@ class Users extends \Core\Model
 
     /*
      * check if email is already in use
-     * @return bool
+     * @param email from post
+     * @return bool Returns true if record exists with specific email, false otherwise
      */
-    protected function emailExists($email){
+    public static function emailExists($email){
+        return self::findByEmail($email) !== false;
+    }
+
+    /*
+     * finds record with specific email and return is, false if not
+     * @param string Email from post
+     *
+     * @return array, record exists with entered email
+     * @return false, record does not exists with entered email
+     */
+    public static function findByEmail($email){
         $conn = static::connect();
 
         $stmt = $conn->prepare("SELECT * FROM user WHERE email = :email");
         $stmt->bindValue("email", $email, PDO::PARAM_STR);
         $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());  //fetch as constructed object
 
-        if($stmt->rowCount() != 0){ //user exists
-            return true;
+        return $stmt->fetch();  //return object, if there is no such record
+    }
+
+    /*
+     * checks if user exists and if entered password is valid
+     *
+     * @param string, entered Email
+     * @param string, entered Password
+     *
+     * @return object, construct Users object if there is a record with entered email/password
+     * @return bool, record with emil/password does not exists or password is not valid
+     */
+    public static function authenticate($email, $password){
+        $user = self::findByEmail($email);
+
+        if(!password_verify($password, $user->password) || !$user){
+            return false;
         }
-        return false;
+        return $user;
     }
 }

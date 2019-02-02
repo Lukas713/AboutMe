@@ -46,6 +46,12 @@ abstract class Controller
         }
         throw new \Exception("Something went wrong!");
     }
+
+    public function redirect($url){
+        exit(header('location: http://' . $_SERVER['HTTP_HOST'] . $url, true, 303));
+
+    }
+
     protected function after(){
     }
     protected function before(){

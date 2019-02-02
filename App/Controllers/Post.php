@@ -44,9 +44,9 @@ class Post extends \Core\Controller {
                 return;
             }
             $_POST = array();
-            exit(header("location: http://" . $_SERVER['HTTP_HOST'] . '/post/success', true, 303));
+            $this->redirect('/post/success');
         }
-        exit(header("location: http://" . $_SERVER['HTTP_HOST'] . '/post/add', true, 303));
+        $this->redirect('/post/add');
     }
 
     /*
@@ -69,11 +69,11 @@ class Post extends \Core\Controller {
             $post_m = new Posts($_POST);
 
             if(!$post_m->update()){
-                exit(header("location: http://" . $_SERVER['HTTP_HOST'] . '/post/edit/' . $post_m->id, true, 303));
+                $this->redirect('/post/edit/');
             }
-            exit(header("location: http://" . $_SERVER['HTTP_HOST'] . '/post/success', true, 303));
+            $this->redirect('/post/success');
         }
-        exit(header("location: http://" . $_SERVER['HTTP_HOST'] . '/post/index', true, 303));
+        $this->redirect('/post/index');
     }
 
     /*

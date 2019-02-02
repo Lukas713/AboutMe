@@ -20,8 +20,8 @@ class Signup extends \Core\Controller
      * renders registration page
      * @return void
      */
-    public function registration(){
-        View::render('Signup/registration.html');
+    public function index(){
+        View::render('Signup/index.html');
     }
 
     /*
@@ -33,14 +33,14 @@ class Signup extends \Core\Controller
             $user_m = new Users($_POST);    //init object from User model
 
             if(!$user_m->save()){
-                View::render('Signup/registration.html', [
+                View::render('Signup/index.html', [
                     "user" => $user_m   //render view with errors as PUBLIC properties
                 ]);
                 return;
             }
-            exit(header('location: http://' . $_SERVER['HTTP_HOST'] . '/signup/success', true, 303));
+            $this->redirect('/signup/success');
         }
-        exit(header('location: http://' . $_SERVER['HTTP_HOST'] . '/signup/registration', true, 303));
+        $this->redirect('/signup');
     }
 
     /*
