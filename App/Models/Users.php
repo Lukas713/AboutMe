@@ -121,7 +121,7 @@ class Users extends \Core\Model
     public static function authenticate($email, $password){
         $user = self::findByEmail($email);
 
-        if(!password_verify($password, $user->password) || !$user){
+        if(!$user || !password_verify($password, $user->password)){
             return false;
         }
         return $user;
