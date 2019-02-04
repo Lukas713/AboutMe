@@ -1,3 +1,5 @@
+/* c:/xampp/mysql/bin/mysql.exe -ulukas -p123456789 --default_character_set=utf8 < C:\xampp\htdocs\AboutMe\public\script.sql*/
+
 drop database if exists aboutLukas;
 
 create database aboutLukas;

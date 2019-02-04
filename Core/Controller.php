@@ -6,6 +6,10 @@
  * Time: 11:38
  */
 namespace Core;
+
+use \Core\View;
+use \App\Auth;
+
 /*
  * Base controller
  * */
@@ -17,6 +21,7 @@ abstract class Controller
     protected $routeParams = [];
     /*
      * constructor
+     *
      * @param array $routeParams, Parameters from the root
      * @return void
     */
@@ -29,6 +34,7 @@ abstract class Controller
      * invoke method before desired action
      * invoke desired action
      * invoke method after desired action
+     *
      * @param string & array
      * @return void
      * */
@@ -47,9 +53,28 @@ abstract class Controller
         throw new \Exception("Something went wrong!");
     }
 
+    /*
+     * redirects user and exits the script
+     *
+     * @param string
+     */
     public function redirect($url){
         exit(header('location: http://' . $_SERVER['HTTP_HOST'] . $url, true, 303));
 
+    }
+
+    /*
+     * checks if user is not logged in
+     * takes requested URI and redirects to login page
+     *
+     * @return void
+     */
+    public function requireLogin(){
+        if(!Auth::isLoggedIn()){
+
+            Auth::rememberRequestedURI();
+            $this->redirect('/login');
+        }
     }
 
     protected function after(){

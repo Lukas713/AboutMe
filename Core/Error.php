@@ -32,7 +32,7 @@ class Error
         if($code != 404){
             $code = 500;
         }
-        http_response_code($code);
+        http_response_code($code);  //Gets or sets the HTTP response status code.
         //production or development mode
         if(\App\Config::SHOW_ERRORS){
             echo '<h1> Fatal error </h1>';

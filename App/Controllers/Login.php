@@ -10,6 +10,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\Users;
+use \App\Auth;
 use http\Client\Curl\User;
 
 /*
@@ -30,17 +31,21 @@ class Login extends \Core\Controller
      * @return void
      */
     public function authorize(){
+        if(!isset($_POST['submit'])){
+            $this->redirect('/login');
+        }
         $user = Users::authenticate($_POST['email'], $_POST['password']); //user is newly constructed object or false value
 
         if(!$user){
             View::render('Login/index.html', [
-                "email" => $_POST['email']
+                "email" => $_POST['email'],
+                "errors" => 'Wrong email/password'
             ]); //if false value, go back to login page
             return;
         }
         /* set session value */
-        $_SESSION['userID'] = $user->id . ' - ' . $user->email;
-        $this->redirect('/');
+        Auth::login($user); //create's seassion
+        $this->redirect(Auth::getReturnToPage()); //redirects user to requested page or home page
     }
 
     /*
@@ -48,21 +53,7 @@ class Login extends \Core\Controller
      * @return void
      */
     public function destroy(){
-        // Unset all of the session variables.
-        $_SESSION = array();
-
-        // If it's desired to kill the session, also delete the session cookie.
-        // Note: This will destroy the session, and not just the session data!
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
-            );
-        }
-
-        // Finally, destroy the session.
-        session_destroy();
-        $this->redirect('/login/index');
+        Auth::logout(); //destroys session
+        $this->redirect('/login');
     }
 }

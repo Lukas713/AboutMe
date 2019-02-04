@@ -72,10 +72,10 @@ class Router
         return false;
     }
 
-    /*follow the routes
-        @param string, URL
-
-    */
+    /* follow the routes
+     * @param string, URL
+     *
+     */
     public function dispatch($url){
 
         $url = $this->removeQueryStringVariable($url);
@@ -92,7 +92,6 @@ class Router
         $controller = $this->params['controller'];
         $controller = $this->convertToStudyCase($controller);
         $controller = $this->getNamespace() . $controller;
-
         if(!class_exists($controller)){
             throw new \Exception("Class $controller does not exists!");
         }
