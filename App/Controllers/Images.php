@@ -9,7 +9,7 @@
 namespace App\Controllers;
 
 use \Core\View;
-use App\Auth;
+use App\Flash;
 
 /* class for logged users only */
 class Images extends Authenticated
@@ -24,5 +24,6 @@ class Images extends Authenticated
         $this->requireLogin();
 
         View::render('Shelf/index.html');
+
     }
 }

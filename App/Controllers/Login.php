@@ -8,6 +8,7 @@
 
 namespace App\Controllers;
 
+use App\Flash;
 use \Core\View;
 use \App\Models\Users;
 use \App\Auth;
@@ -37,23 +38,37 @@ class Login extends \Core\Controller
         $user = Users::authenticate($_POST['email'], $_POST['password']); //user is newly constructed object or false value
 
         if(!$user){
+            Flash::addMessage('Login was unsuccessful, please try again', Flash::WARNING);
             View::render('Login/index.html', [
                 "email" => $_POST['email'],
-                "errors" => 'Wrong email/password'
             ]); //if false value, go back to login page
             return;
         }
         /* set session value */
         Auth::login($user); //create's seassion
+        $user = Auth::getUser();
+        Flash::addMessage('Welcome ' . $user->email);   //add flash message
         $this->redirect(Auth::getReturnToPage()); //redirects user to requested page or home page
     }
 
     /*
-     * destroy session
+     * destroy session and redirects to method that shows logout message
+     *
      * @return void
      */
     public function destroy(){
         Auth::logout(); //destroys session
+        $this->redirect('/login/getLogoutMessage');
+    }
+
+    /*
+     * creates message with new session after destroying last one
+     * redirects to login page with message
+     *
+     * @return void
+     */
+    public function getLogoutMessage(){
+        Flash::addMessage("Bye, You have been successfully logged out", Flash::SUCCESS);
         $this->redirect('/login');
     }
 }

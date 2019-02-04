@@ -7,8 +7,8 @@
  */
 namespace Core;
 
-use \Core\View;
 use \App\Auth;
+use \App\Flash;
 
 /*
  * Base controller
@@ -60,7 +60,6 @@ abstract class Controller
      */
     public function redirect($url){
         exit(header('location: http://' . $_SERVER['HTTP_HOST'] . $url, true, 303));
-
     }
 
     /*
@@ -71,6 +70,7 @@ abstract class Controller
      */
     public function requireLogin(){
         if(!Auth::getUser()){
+            Flash::addMessage('Please log in first', Flash::INFO);
 
             Auth::rememberRequestedURI();
             $this->redirect('/login');

@@ -89,4 +89,5 @@ class Auth
             return Users::findById($session[0]);
         }
     }
+
 }

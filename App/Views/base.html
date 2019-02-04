@@ -20,6 +20,12 @@
         </style>
     </head>
     <body>
+        {% for message in messages %}
+        <div class="alert alert-{{message.type}}" role="alert">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+
     {% if currentUser %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
