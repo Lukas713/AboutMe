@@ -8,6 +8,8 @@
 
 namespace App;
 
+use \App\Models\Users;
+
 /*
  * Class that cares about authenticating users
  */
@@ -74,5 +76,17 @@ class Auth
             return '/';
         }
         return $_SESSION['returnTo'];
+    }
+
+    /*
+     * finds user by id from session
+     *
+     * @return user object or null if there is no session
+     */
+    public static function getUser(){
+        if(isset($_SESSION['userID'])){
+            $session = explode('-', $_SESSION['userID']);
+            return Users::findById($session[0]);
+        }
     }
 }

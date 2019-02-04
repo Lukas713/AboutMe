@@ -3,6 +3,9 @@
 {% block title %} Home{% endblock %}
 
 {% block body %}
+{% if currentUser is not empty %}
+    {{currentUser.email}}
+{% endif %}
 <br>
 <div class="container" style="font-size: large;">
     <div class="row justify-content-md-center">

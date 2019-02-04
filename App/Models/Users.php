@@ -108,6 +108,23 @@ class Users extends \Core\Model
 
         return $stmt->fetch();  //return object, if there is no such record
     }
+    /*
+     * finds record with specific id and return is, false if not
+     * @param string id
+     *
+     * @return array, record exists with entered id
+     * @return false, record does not exists with entered id
+     */
+    public static function findById($id){
+        $conn = static::connect();
+
+        $stmt = $conn->prepare("SELECT * FROM user WHERE id = :id");
+        $stmt->bindValue("id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());  //fetch as constructed object
+
+        return $stmt->fetch();  //return object, if there is no such record
+    }
 
     /*
      * checks if user exists and if entered password is valid

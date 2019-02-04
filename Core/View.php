@@ -21,7 +21,7 @@ class View
         if($twig === null){
             $loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/App/Views'); //loads template from the file system
             $twig = new \Twig_Environment($loader); //call template with default configuration
-            $twig->addGlobal('isLogged', \App\Auth::isLoggedIn());
+            $twig->addGlobal('currentUser', \App\Auth::getUser());
         }
         //loading template with some variables
         echo $twig->render($template, $arguments);
