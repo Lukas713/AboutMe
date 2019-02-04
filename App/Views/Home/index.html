@@ -3,7 +3,7 @@
 {% block title %} Home{% endblock %}
 
 {% block body %}
-{% if currentUser is not empty %}
+{% if currentUser %}
     {{currentUser.email}}
 {% endif %}
 <br>

@@ -21,6 +21,15 @@ create table user (
   password varchar(255) not null
 );
 
+create table images (
+  id int not null primary key auto_increment,
+  imagePath varchar(255) not null,
+  title varchar(20) not null,
+  user int
+);
+
+alter table images add foreign key (user) references user(id);
+
 insert into project (id, title, branch, link, description) values
 (null, 'BroomCall', 'Cleaning service', 'http://lukas713.byethost17.com/bootstrapBroomCall/', 'BroomCall is a web application that solves many problems to company that
 has cleaning services as main priority. It basicaly web page with all the informations

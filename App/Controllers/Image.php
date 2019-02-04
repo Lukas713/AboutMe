@@ -9,10 +9,10 @@
 namespace App\Controllers;
 
 use \Core\View;
-use App\Flash;
+use \App\Models\Images;
 
 /* class for logged users only */
-class Images extends Authenticated
+class Image extends Authenticated
 {
 
     /*
@@ -23,7 +23,16 @@ class Images extends Authenticated
     public function index(){
         $this->requireLogin();
 
-        View::render('Shelf/index.html');
+        View::render('Image/index.html');
+    }
 
+    public function insert(){
+        View::render('Image/index.html');
+
+        if(isset($_POST['submit'])){
+            print_r($_FILES);
+            echo '<hr>'; 
+            print_r($_POST);
+        }
     }
 }
