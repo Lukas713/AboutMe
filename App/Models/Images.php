@@ -48,7 +48,7 @@ class Images extends \Core\Model
     /**
      * insert image into database
      * @param string, title
-     * @return void
+     * @return mixed, false if there is errors or array if insert is executed correctly
      */
     public function insert($title){
         try {

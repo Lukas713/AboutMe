@@ -76,8 +76,13 @@ class Image extends Authenticated
             return;
         }
         $file_m = new Images($_FILES['image']); //create models object
-        $record = $file_m->insert($_POST['title']); //invoke model method that inserts file in database
-
+        $record = $file_m->insert($_POST['title']);
+        if(!$record){ //invoke model method that inserts file in database
+            View::render('Image/index.html', [
+                "records" => $file_m
+            ]);
+            return;
+        }
         if(!$this->compress($_FILES['image']['tmp_name'], $record['path'], 90)){
             $this->redirect('/image/index');
         }
