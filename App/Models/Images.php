@@ -79,8 +79,19 @@ class Images extends \Core\Model
         }
     }
 
+    /**
+     * method that deletes image from database with id that is sent by form
+     *
+     * @return bool
+     */
     public function delete(){
-
+        if(!$this->recordExists($this->id)){
+            return false;
+        }
+       $conn = static::connect();
+       $stmt = $conn->prepare("DELETE FROM images WHERE id = :id");
+       $stmt->bindValue("id", $this->id, PDO::PARAM_INT);
+       return $stmt->execute();
     }
 
     /**
@@ -130,5 +141,24 @@ class Images extends \Core\Model
             }
         }
         return $records;
+    }
+
+    /**
+     * method that connects to database and checks if record
+     * with id even exists
+     *
+     * @param int, id that is sent by hidden input when form is submitted
+     * @return bool
+     */
+    protected function recordExists($id){
+        $conn = static::connect();
+        $stmt = $conn->prepare("SELECT * from images where id = :id");
+        $stmt->bindValue("id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0){ //record does not exists
+            return false;
+        }
+        return true;
     }
 }

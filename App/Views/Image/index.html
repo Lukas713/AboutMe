@@ -17,28 +17,22 @@
             </form>
         </div>
     </div>
-    <div class="row" style="float:right;">
-        <h5><b>Check to delete</b></h5>
-    </div>
+    {% if images is not empty %}
     <hr>
-    <form action="/image/delete" method="post">
-        <input type="submit" class="btn btn-danger" value="Delete" name="submit">
-        <br>{% for image in images %}
+        <br>{% for image in images %}<br>
         <div class="row justify-content-md-center">
-            <div class="col col-md-11">
                  <div class="hovereffect">
                      <img src="../../../{{image.path}}" class="img-fluid" alt="{{image.title}}" data-toggle="tooltip" data-placement="top" title="{{image.title}}">
                  </div>
-            </div>
-                <div class="col col-md-1">
-
-                    <div class="input-group-text">
-                        <input type="checkbox" name="delete-{{image.id}}" id="delete-{{image.id}}">
-                    </div>
-                </div>
-        </div><hr>
+        </div>
+    <div class="row justify-content-md-center">
+        <form action="/image/delete" method="post">
+            <input type="hidden" name="id" value="{{image.id}}">
+            <input type="submit" class="btn btn-danger" name="submit" value="Delete"  onclick="return confirm('Are you sure?');">
+        </form>
+    </div><hr>
         {% endfor %}
-    </form>
+    {% endif %}
 </div>
 {% endblock %}
 

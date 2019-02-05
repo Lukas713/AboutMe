@@ -22,7 +22,7 @@ class Image extends Authenticated
      * @return void
      */
     public function index(){
-        $this->requireLogin();
+        $this->before();
 
         $records = Images::getAll();
         View::render('Image/index.html', [
@@ -30,7 +30,28 @@ class Image extends Authenticated
         ]);
     }
 
+    /**
+     * method that requires login user
+     * if user submits form for deleting image, Model method is invoked
+     * renders view with proper message
+     *
+     * @return void
+     */
+    public function delete(){
+        $this->before();
 
+        if(!isset($_POST['submit'])){
+            $this->redirect('/image/index');
+        }
+        $image_m = new Images($_POST);
+        if(!$image_m->delete()){
+            Flash::addMessage("Something went wrong, please try again", Flash::INFO);
+            View::render('Image/index.html');
+            return;
+        }
+        Flash::addMessage("Successfully deleted");
+        View::render('Image/index.html');
+    }
 
     /**
      * stops if form is submitted, if image is not sent and if there is errors
