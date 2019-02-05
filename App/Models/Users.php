@@ -11,17 +11,17 @@ namespace App\Models;
 use mysql_xdevapi\Exception;
 use PDO;
 
-/*
+/**
  * User model that talks with the database
  */
 class Users extends \Core\Model
 {
-    /*
+    /**
      * @var array that holds errors (if any)
      */
     public $errors = [];
 
-    /*
+    /**
      * init objects properties
      */
     public function __construct($params = [])
@@ -31,7 +31,7 @@ class Users extends \Core\Model
         }
     }
 
-    /*
+    /**
      * inserts user data into database
      * @return bool
      */
@@ -51,7 +51,7 @@ class Users extends \Core\Model
         return $stmt->execute();
     }
 
-    /*
+    /**
      * validate inputs
      * @return void
      */
@@ -82,7 +82,7 @@ class Users extends \Core\Model
         }
     }
 
-    /*
+    /**
      * check if email is already in use
      * @param email from post
      * @return bool Returns true if record exists with specific email, false otherwise
@@ -91,7 +91,7 @@ class Users extends \Core\Model
         return self::findByEmail($email) !== false;
     }
 
-    /*
+    /**
      * finds record with specific email and return is, false if not
      * @param string Email from post
      *
@@ -108,7 +108,7 @@ class Users extends \Core\Model
 
         return $stmt->fetch();  //return object, if there is no such record
     }
-    /*
+    /**
      * finds record with specific id and return is, false if not
      * @param string id
      *
@@ -126,7 +126,7 @@ class Users extends \Core\Model
         return $stmt->fetch();  //return object, if there is no such record
     }
 
-    /*
+    /**
      * checks if user exists and if entered password is valid
      *
      * @param string, entered Email

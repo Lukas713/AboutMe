@@ -14,7 +14,7 @@ class Images extends \Core\Model
 {
     public $errors = [];
 
-    /*
+    /**
      * takes assoc array as parameter and creates properties
      *
      * @param assoc array
@@ -27,7 +27,7 @@ class Images extends \Core\Model
         }
     }
 
-    /*
+    /**
      * insert image into database
      * @param string, title
      * @return void
@@ -61,7 +61,7 @@ class Images extends \Core\Model
         }
     }
 
-    /*
+    /**
      * returns record with last inserted id
      *
      * @param int last inserted id
@@ -76,7 +76,7 @@ class Images extends \Core\Model
     }
 
 
-    /*
+    /**
      * validate input title
      *
      * @return void*/

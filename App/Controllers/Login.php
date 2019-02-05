@@ -14,12 +14,12 @@ use \App\Models\Users;
 use \App\Auth;
 use http\Client\Curl\User;
 
-/*
+/**
  * controller class that talks with Users model and Login view
  */
 class Login extends \Core\Controller
 {
-    /*
+    /**
      * renders index page of login
      * @return void
      */
@@ -27,7 +27,7 @@ class Login extends \Core\Controller
         View::render('Login/index.html');
     }
 
-    /*
+    /**
      * authorize user and renders login page if false authorisation, home page otherwise
      * @return void
      */
@@ -51,7 +51,7 @@ class Login extends \Core\Controller
         $this->redirect(Auth::getReturnToPage()); //redirects user to requested page or home page
     }
 
-    /*
+    /**
      * destroy session and redirects to method that shows logout message
      *
      * @return void
@@ -61,7 +61,7 @@ class Login extends \Core\Controller
         $this->redirect('/login/getLogoutMessage');
     }
 
-    /*
+    /**
      * creates message with new session after destroying last one
      * redirects to login page with message
      *

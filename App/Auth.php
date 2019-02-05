@@ -10,12 +10,12 @@ namespace App;
 
 use \App\Models\Users;
 
-/*
+/**
  * Class that cares about authenticating users
  */
 class Auth
 {
-    /*
+    /**
      * create's session
      * @param object
      * @return void
@@ -25,7 +25,7 @@ class Auth
         $_SESSION['userID'] = $user->id . ' - ' . $user->email;
     }
 
-    /*
+    /**
      * destroys session
      * @return void
      */
@@ -50,7 +50,7 @@ class Auth
         session_destroy();
     }
 
-    /*
+    /**
      * set requested URL
      * @return void
      */
@@ -58,7 +58,7 @@ class Auth
         $_SESSION['returnTo'] = $_SERVER['REQUEST_URI'];
     }
 
-    /*
+    /**
      * get requested page or home page
      * @return void
      */
@@ -70,7 +70,7 @@ class Auth
         return $_SESSION['returnTo'];
     }
 
-    /*
+    /**
      * finds user by id from session
      *
      * @return user object or null if there is no session

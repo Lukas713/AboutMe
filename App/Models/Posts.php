@@ -11,17 +11,17 @@ namespace App\Models;
 use mysql_xdevapi\Exception;
 use PDO;
 
-/*
+/**
  * Post model that operates on database
  */
 class Posts extends \Core\Model
 {
-    /*
+    /**
      * @var that holds error texts if any
      */
     public $errors = [];
 
-    /*
+    /**
      * init properties with input values from $_POST
      */
     public function __construct($params)
@@ -31,7 +31,7 @@ class Posts extends \Core\Model
         }
     }
 
-    /*
+    /**
      * fetch all projects from database
      * @return array
      */
@@ -48,7 +48,7 @@ class Posts extends \Core\Model
         }
     }
 
-    /*
+    /**
      * inserts record into database
      * @return bool
      */
@@ -75,7 +75,7 @@ class Posts extends \Core\Model
         }
     }
 
-    /*
+    /**
      * update record inside database
      * @return bool
      */
@@ -100,7 +100,7 @@ class Posts extends \Core\Model
         }
     }
 
-    /*
+    /**
      * get the result with id from parameter
      * @return array
      */
@@ -118,7 +118,7 @@ class Posts extends \Core\Model
         }
     }
 
-    /*
+    /**
      * checks if project with title as argument exists
      * @return bool
      */
@@ -134,7 +134,7 @@ class Posts extends \Core\Model
         return true;
     }
 
-    /*
+    /**
      * validates inputs from form for adding new project
      * @return void
      */

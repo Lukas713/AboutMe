@@ -15,21 +15,23 @@ use \App\Flash;
  * */
 abstract class Controller
 {
-    /*
+    /**
      * parameters from matched route
-    */
+     */
     protected $routeParams = [];
-    /*
+
+    /**
      * constructor
      *
      * @param array $routeParams, Parameters from the root
      * @return void
-    */
+     */
     public function __construct($routeParams)
     {
         $this->routeParams = $routeParams;
     }
-    /*
+
+    /**
      * magic methods is invoked at the end of the dispatcher
      * invoke method before desired action
      * invoke desired action
@@ -37,7 +39,7 @@ abstract class Controller
      *
      * @param string & array
      * @return void
-     * */
+     */
     public function __call($name, $arguments)
     {
         $method = preg_replace('/@Action/', '', $name);
@@ -53,7 +55,7 @@ abstract class Controller
         throw new \Exception("Something went wrong!");
     }
 
-    /*
+    /**
      * redirects user and exits the script
      *
      * @param string
@@ -62,7 +64,7 @@ abstract class Controller
         exit(header('location: http://' . $_SERVER['HTTP_HOST'] . $url, true, 303));
     }
 
-    /*
+    /**
      * checks if user is not logged in
      * takes requested URI and redirects to login page
      *

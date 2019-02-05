@@ -11,12 +11,12 @@ namespace App\Controllers;
 use App\Models\Users;
 use Core\View;
 
-/*
+/**
  * Sign up controller that talks with User model and Signup view
  */
 class Signup extends \Core\Controller
 {
-    /*
+    /**
      * renders registration page
      * @return void
      */
@@ -24,7 +24,7 @@ class Signup extends \Core\Controller
         View::render('Signup/index.html');
     }
 
-    /*
+    /**
      * invokes saving in database method from Users model
      * @return void
      */
@@ -43,7 +43,7 @@ class Signup extends \Core\Controller
         $this->redirect('/signup');
     }
 
-    /*
+    /**
      * renders page after successfully registration
      * @return void
      */

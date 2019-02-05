@@ -11,21 +11,21 @@ namespace Core;
 /*  Dispatcher class */
 class Router
 {
-    /*
+    /**
      * @assoc array that holds routes
-    */
+     */
     protected $routes = [];
 
-    /*
-    * @assoc array that holds params
-    */
+    /**
+     * @assoc array that holds params
+     */
     protected $params = [];
 
-    /* function that adds route into routing table using regular expression
-        @param string, Route URL
-        @param array, Parameters
-        @return void
-    */
+    /** function that adds route into routing table using regular expression
+     *   @param string, Route URL
+     *   @param array, Parameters
+     *   @return void
+     */
     public function add($route, $params = []){
 
         /*escape forward slash*/
@@ -47,10 +47,10 @@ class Router
         $this->routes[$route] = $params;
     }
 
-    /* parse URL and recognize controller, action part
-        @param string, URL
-        @return bool
-    */
+    /** parse URL and recognize controller, action part
+     *  @param string, URL
+     *  @return bool
+     */
     public function match($url){
         /* for all routes */
         foreach($this->routes as $route => $param){
@@ -72,9 +72,9 @@ class Router
         return false;
     }
 
-    /* follow the routes
-     * @param string, URL
+    /** follow the routes
      *
+     * @param string, URL
      */
     public function dispatch($url){
 
@@ -113,7 +113,7 @@ class Router
         return $this->params;
     }
 
-    /*
+    /**
      * replace '-' with ' '
      * set each first letter into upper letter
      * replace ' ' with ''
@@ -121,11 +121,11 @@ class Router
      * @return string
      *
      * e.x. new-employee into NewEmployee
-     * */
+     */
     protected function convertToStudyCase($string){
         return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
     }
-    /*
+    /**
      * convert string into study case
      * convert just first letter into lower letter
      * @param string
@@ -136,7 +136,7 @@ class Router
     protected function convertToCamelCase($string){
         return lcfirst($this->convertToStudyCase($string));
     }
-    /*
+    /**
      * removes query string variables from URL
      * but still can access then in $_GET global variable
      *
@@ -144,7 +144,7 @@ class Router
      *
      * @param string
      * @return string
-     * */
+     */
     protected function removeQueryStringVariable($url){
         if($url != ''){
             $parts = explode('&', $url, 2); //split url, first half is before & and second is after
@@ -158,9 +158,11 @@ class Router
         return $url;
     }
 
-    /*get the namespace for the controller class
-    namespace defined in the route parameters is added if presented
-    @return string  request URL */
+    /**
+     * get the namespace for the controller class
+     * namespace defined in the route parameters is added if presented
+     * @return string  request URL
+     */
     protected function getNamespace(){
         $namespace = '\App\Controllers\\';
         if(array_key_exists('namespace', $this->params)){

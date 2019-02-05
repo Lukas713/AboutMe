@@ -11,26 +11,26 @@ namespace App;
 /* class that cares about flash messages */
 class Flash
 {
-    /*
+    /**
      * success message
      * @var string
      */
     const SUCCESS = 'success';
 
-    /*
+    /**
      * info message
      * @var string
      */
     const INFO = 'info';
 
-    /*
+    /**
      * warning message
      * @var string
      */
     const WARNING = 'warning';
 
 
-    /*
+    /**
      * add a flash message into the $_SESSION super global
      *
      * @param string, message text
@@ -49,7 +49,7 @@ class Flash
        ];
     }
 
-    /*
+    /**
      * gets message from $_SESSION super global array
      * @return string
      */

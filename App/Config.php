@@ -2,6 +2,9 @@
 
 namespace App;
 
+/**
+ * class that holds constants for connecting to database
+ */
 class Config {
 
     const DB_HOST = 'localhost';

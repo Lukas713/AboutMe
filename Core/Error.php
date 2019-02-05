@@ -10,7 +10,7 @@ namespace Core;
 /*Exception and error handler*/
 class Error
 {
-    /*
+    /**
      *  Error handler. Convert all errors to Exceptions by throwing the ErrorException object
      *  @param int $level, Error level
      *  @param string $message, Error message
@@ -22,7 +22,7 @@ class Error
             throw new \ErrorException($message, 0, $level, $file, $line);
         }
     }
-    /*
+    /**
      * Exception handler.
      * @param Exception $exception, The exception
      * @return void

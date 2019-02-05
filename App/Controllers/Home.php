@@ -4,12 +4,12 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Auth;
 
-/*
+/**
  * Home controller that renders front page
  */
 class Home extends \Core\Controller {
 
-    /*
+    /**
      * renders index page
      * @return void
      */

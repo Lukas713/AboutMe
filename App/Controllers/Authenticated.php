@@ -8,12 +8,12 @@
 
 namespace App\Controllers;
 
-/*
+/**
  * Authenticated base controller for classes that requires authentication
  */
 abstract class Authenticated extends \Core\Controller
 {
-    /*
+    /**
      * invoked before every  inaccessible method
      *
      * @return void

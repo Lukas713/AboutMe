@@ -4,12 +4,12 @@ namespace App\Controllers;
 use \Core\View;
 use App\Models\Posts;
 
-/*
+/**
  * Post controller that talk with Post view and Post model
  */
 class Post extends \Core\Controller {
 
-    /*
+    /**
      * renders index page of posts
      * @return void
      */
@@ -21,7 +21,7 @@ class Post extends \Core\Controller {
         ]);
     }
 
-    /*
+    /**
      * invoke view for adding new record
      * @return void
      */
@@ -29,7 +29,7 @@ class Post extends \Core\Controller {
         View::render('Post/add.html');
     }
 
-    /*
+    /**
      * invoke models method for adding new record and redirects user
      * @return void
      */
@@ -49,7 +49,7 @@ class Post extends \Core\Controller {
         $this->redirect('/post/add');
     }
 
-    /*
+    /**
      * loads page for editing record
      * @return void
      */
@@ -60,7 +60,7 @@ class Post extends \Core\Controller {
         ]);
     }
 
-    /*
+    /**
      * invoke method from model that updates record
      * @return void
      */
@@ -76,7 +76,7 @@ class Post extends \Core\Controller {
         $this->redirect('/post/index');
     }
 
-    /*
+    /**
      * renders view for successfully operation on database
      * @return void
      */
