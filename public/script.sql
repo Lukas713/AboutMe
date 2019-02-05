@@ -23,7 +23,7 @@ create table user (
 
 create table images (
   id int not null primary key auto_increment,
-  imagePath varchar(255) not null,
+  path varchar(255) not null,
   title varchar(20) not null,
   user int
 );

@@ -1,4 +1,6 @@
 <?php
+define('BP', __DIR__ . '/');
+
 /* require composer's autoloader */
 require '../vendor/autoload.php';
 

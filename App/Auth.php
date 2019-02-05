@@ -51,14 +51,6 @@ class Auth
     }
 
     /*
-     * check if user is logged in
-     * @return bool
-     */
-    public static function isLoggedIn(){
-        return isset($_SESSION['userID']);
-    }
-
-    /*
      * set requested URL
      * @return void
      */
