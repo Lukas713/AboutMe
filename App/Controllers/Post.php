@@ -1,8 +1,10 @@
 <?php
 namespace App\Controllers;
 
+use App\Flash;
 use \Core\View;
 use App\Models\Posts;
+use \App\Auth;
 
 /**
  * Post controller that talk with Post view and Post model
@@ -26,6 +28,14 @@ class Post extends \Core\Controller {
      * @return void
      */
     public function add(){
+        $this->requireLogin();
+
+        $user = Auth::getUser();
+        if($user->email != 'lukas.scharmitzer@gmail.com'){
+            Flash::addMessage("You dont have permission to do that action", Flash::WARNING);
+            $this->index();
+            return;
+        }
         View::render('Post/add.html');
     }
 
@@ -54,6 +64,14 @@ class Post extends \Core\Controller {
      * @return void
      */
     public function edit() {
+        $this->requireLogin();
+
+        $user = Auth::getUser();
+        if($user->email != 'lukas.scharmitzer@gmail.com'){
+            Flash::addMessage("You dont have permission to do that", Flash::WARNING);
+            $this->index();
+            return;
+        }
         $result = Posts::load($this->routeParams['id']); //invoke load() method from Model
         View::render('Post/edit.html', [
             'infos' => $result

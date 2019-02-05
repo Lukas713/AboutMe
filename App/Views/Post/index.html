@@ -6,9 +6,11 @@
 
 <div class="container" style="margin-top: 1rem; margin-bottom: 1rem;">
     <div class="row justify-content-md-center">
+        {% if currentUser.email == "lukas.scharmitzer@gmail.com" %}
         <div class="col col-md-6">
             <a href="/post/add" class="btn btn-secondary btn-lg btn-block">Add new</a>
         </div>
+        {% endif %}
     </div>
 </div>
 <div class="container" style="font-size: large;">
@@ -20,7 +22,10 @@
                 <div class="card-body">
                     <h5 class="card-title"><b>Branch of business:</b> {{post.branch}}</h5>
                     <p class="card-text"><b>Description:</b> {{post.description}}</p><hr>
-                    <a href="{{post.link}}" class="btn btn-info">Code</a> <a href="/post/edit/{{post.id}}" class="btn btn-success">Change</a>
+                    <a href="{{post.link}}" class="btn btn-info">Code</a>
+                    {% if currentUser.email == "lukas.scharmitzer@gmail.com" %}
+                    <a href="/post/edit/{{post.id}}" class="btn btn-success">Change</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

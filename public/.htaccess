@@ -1,3 +1,10 @@
+#<VirtualHost *:80>
+#   DocumentRoot "C:\xampp\htdocs\AboutMe\public"
+#   ServerName aboutLukas.com
+#	<Directory "C:\xampp\htdocs\AboutMe">
+#		Require all granted
+#	</Directory>
+#</VirtualHost>
 # Remove the question mark "?" from the request but maintain the query string
 RewriteEngine on
 RewriteBase /
