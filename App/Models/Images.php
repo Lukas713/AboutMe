@@ -60,6 +60,7 @@ class Images extends \Core\Model
             $userID = explode('-', $_SESSION['userID']);
             $file = BP . 'images/' . trim($userID[1]) . "/" . $title . ".jpg";  //take file path
 
+            /* creates file on server*/
             if(!file_exists(BP . 'images/' . trim($userID[1]))){
                 mkdir(BP . 'images/' . trim($userID[1]));
             }
@@ -85,12 +86,19 @@ class Images extends \Core\Model
      * @return bool
      */
     public function delete(){
-        if(!$this->recordExists($this->id)){
+        $record = $this->getLastRecord($this->id);
+        if(!$record){
             return false;
         }
-       $conn = static::connect();
-       $stmt = $conn->prepare("DELETE FROM images WHERE id = :id");
-       $stmt->bindValue("id", $this->id, PDO::PARAM_INT);
+        $conn = static::connect();
+        $stmt = $conn->prepare("DELETE FROM images WHERE id = :id");
+        $stmt->bindValue("id", $record['id'], PDO::PARAM_INT);
+
+       /* removes file from server */
+        $userID = explode('-', $_SESSION['userID']);
+        $file = BP . 'images/' . trim($userID[1]) . "/" . $record['title'] . ".jpg";  //take file path
+        unlink($file);
+
        return $stmt->execute();
     }
 
@@ -98,7 +106,7 @@ class Images extends \Core\Model
      * returns record with last inserted id
      *
      * @param int last inserted id
-     * @return array
+     * @return mixed, false if there is no records, assoc array if there is one
      */
     protected function getLastRecord($id){
         $conn = static::connect();
@@ -141,24 +149,5 @@ class Images extends \Core\Model
             }
         }
         return $records;
-    }
-
-    /**
-     * method that connects to database and checks if record
-     * with id even exists
-     *
-     * @param int, id that is sent by hidden input when form is submitted
-     * @return bool
-     */
-    protected function recordExists($id){
-        $conn = static::connect();
-        $stmt = $conn->prepare("SELECT * from images where id = :id");
-        $stmt->bindValue("id", $id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        if($stmt->rowCount() == 0){ //record does not exists
-            return false;
-        }
-        return true;
     }
 }

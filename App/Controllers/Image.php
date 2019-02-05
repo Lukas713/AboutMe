@@ -49,8 +49,9 @@ class Image extends Authenticated
             View::render('Image/index.html');
             return;
         }
+        //remove file from directory
         Flash::addMessage("Successfully deleted");
-        View::render('Image/index.html');
+        $this->index();
     }
 
     /**

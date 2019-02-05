@@ -19,7 +19,7 @@
     </div>
     {% if images is not empty %}
     <hr>
-        <br>{% for image in images %}<br>
+        {% for image in images %}
         <div class="row justify-content-md-center">
                  <div class="hovereffect">
                      <img src="../../../{{image.path}}" class="img-fluid" alt="{{image.title}}" data-toggle="tooltip" data-placement="top" title="{{image.title}}">
@@ -28,6 +28,7 @@
     <div class="row justify-content-md-center">
         <form action="/image/delete" method="post">
             <input type="hidden" name="id" value="{{image.id}}">
+            <input type="hidden" name="title" value="{{image.title}}">
             <input type="submit" class="btn btn-danger" name="submit" value="Delete"  onclick="return confirm('Are you sure?');">
         </form>
     </div><hr>
