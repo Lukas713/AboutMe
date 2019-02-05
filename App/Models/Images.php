@@ -28,6 +28,24 @@ class Images extends \Core\Model
     }
 
     /**
+     * get all user images and pass them to controller
+     *
+     * @return array, associative array with records
+     */
+    public static function getAll(){
+        $userID = explode('-', $_SESSION['userID']);
+        $conn = static::connect();
+        $stmt = $conn->prepare("SELECT * FROM images WHERE user = :user
+                                        ORDER BY id DESC");
+        $stmt->bindValue("user", $userID[0], PDO::PARAM_INT);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return self::convertPath($result);
+    }
+
+
+    /**
      * insert image into database
      * @param string, title
      * @return void
@@ -61,6 +79,10 @@ class Images extends \Core\Model
         }
     }
 
+    public function delete(){
+
+    }
+
     /**
      * returns record with last inserted id
      *
@@ -74,7 +96,6 @@ class Images extends \Core\Model
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
 
     /**
      * validate input title
@@ -93,5 +114,21 @@ class Images extends \Core\Model
         if(strlen($title) > 20){
             $this->errors[] = 'Title mut have maximum 20 characters';
         }
+    }
+
+    /**
+     * removes unnecessary part of the path
+     *
+     * @param array, $records are assciative array of fetched results from database
+     * @return array, new array that has only helpful infos
+     */
+    public static function convertPath($records){
+        if(!empty($records)){
+            foreach($records as $key => $value){
+                $path = explode('public/', $value['path']);
+                $records[$key]['path'] = $path[1];
+            }
+        }
+        return $records;
     }
 }

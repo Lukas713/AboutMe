@@ -12,8 +12,13 @@ namespace Core;
 class View
 {
     /**
+     * creates Twig envirnomet object with template and its arguments
+     * adds globals that serves to display features for logged user only
+     * and to display messages if any
+     *
      * @param string template, The template file
      * @param array $arguments, Assoc array of data to display in the view (optional)
+     *
      * @return void
      */
     public static function render($template, $arguments = []){

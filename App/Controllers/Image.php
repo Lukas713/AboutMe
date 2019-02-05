@@ -24,8 +24,13 @@ class Image extends Authenticated
     public function index(){
         $this->requireLogin();
 
-        View::render('Image/index.html');
+        $records = Images::getAll();
+        View::render('Image/index.html', [
+            "images" => $records
+        ]);
     }
+
+
 
     /**
      * stops if form is submitted, if image is not sent and if there is errors
@@ -50,10 +55,12 @@ class Image extends Authenticated
         }
         $file_m = new Images($_FILES['image']); //create models object
         $record = $file_m->insert($_POST['title']); //invoke model method that inserts file in database
-        move_uploaded_file($_FILES['image']['tmp_name'], $record['path']); //move from temp into images directory
+
+        if(!$this->compress($_FILES['image']['tmp_name'], $record['path'], 90)){
+            $this->redirect('/image/index');
+        }
         Flash::addMessage("Successful upload");
-        View::render('Image/index.html');
-        return;
+        $this->redirect('/image/index');
     }
 
     /**
@@ -62,11 +69,40 @@ class Image extends Authenticated
      * @return bool
      */
     protected function validateImage($file){
-
         if(!exif_imagetype($file['image']['tmp_name'])){
             Flash::addMessage("Image format is wrong", Flash::INFO);
             return false;
         }
+        return true;
+    }
+
+    /**
+     * takes image infos, creates new image on searched destination
+     * and sets quality of the image to 90/100
+     *
+     * @param string, $source as path to image (temp folder on sevrer)
+     * @param string, $destination as path to new place where image will be placed
+     * @param int, $quality as quality of image (third parameter of imagejpeg, 0/100)
+     *
+     * @return bool, true if image is successfully created, false otherwise
+     */
+    protected function compress($source, $destination, $quality){
+        $info = getimagesize($source);  //get infos about image (height, width...)
+        //Create a new image from file or URL
+        if($info['mime'] == 'image/jpeg'){
+            $image = imagecreatefromjpeg($source);
+
+        }else if($info['mime'] == 'image/png'){
+            $image = imagecreatefrompng($source);
+
+        }else if($info['mime'] == 'image/gif'){
+            $image = imagecreatefromgif($source);
+        }
+        if(!$image){
+            Flash::addMessage("Something went wrong, please try again", Flash::INFO);
+            return false;
+        }
+        imagejpeg($image, $destination, $quality); //Output image to browser or file
         return true;
     }
 }

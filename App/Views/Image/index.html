@@ -17,5 +17,35 @@
             </form>
         </div>
     </div>
+    <div class="row" style="float:right;">
+        <h5><b>Check to delete</b></h5>
+    </div>
+    <hr>
+    <form action="/image/delete" method="post">
+        <input type="submit" class="btn btn-danger" value="Delete" name="submit">
+        <br>{% for image in images %}
+        <div class="row justify-content-md-center">
+            <div class="col col-md-11">
+                 <div class="hovereffect">
+                     <img src="../../../{{image.path}}" class="img-fluid" alt="{{image.title}}" data-toggle="tooltip" data-placement="top" title="{{image.title}}">
+                 </div>
+            </div>
+                <div class="col col-md-1">
+
+                    <div class="input-group-text">
+                        <input type="checkbox" name="delete-{{image.id}}" id="delete-{{image.id}}">
+                    </div>
+                </div>
+        </div><hr>
+        {% endfor %}
+    </form>
 </div>
+{% endblock %}
+
+{% block footer %}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+    </script>
 {% endblock %}
