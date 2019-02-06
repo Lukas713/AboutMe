@@ -73,8 +73,11 @@ class Router
     }
 
     /** follow the routes
+     * removes additional variables from url, calls controller if syntax is correct
+     * and invoking method if there is callable method
      *
-     * @param string, URL
+     * @param string, URL from $_SERVER['QUERY_STRING']
+     * @return void
      */
     public function dispatch($url){
 
@@ -97,7 +100,7 @@ class Router
         }
 
         $controllerObject = new $controller($this->params);
-        $action = $this->params['action'];
+        $action = $this->params['action'].'@Action';
         $action = $this->convertToCamelCase($action);
 
         $controllerObject->$action($this->params);

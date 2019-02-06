@@ -22,8 +22,6 @@ class Image extends Authenticated
      * @return void
      */
     public function index(){
-        $this->before();
-
         $records = Images::getAll();
         View::render('Image/index.html', [
             "images" => $records
@@ -38,8 +36,6 @@ class Image extends Authenticated
      * @return void
      */
     public function delete(){
-        $this->before();
-
         if(!isset($_POST['submit'])){
             $this->redirect('/image/index');
         }

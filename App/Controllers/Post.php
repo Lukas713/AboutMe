@@ -101,14 +101,4 @@ class Post extends \Core\Controller {
     public function success(){
         View::render('Post/success.html');
     }
-
-
-    protected function before()
-    {
-        echo 'I am invoked before' . '<hr>';
-    }
-    protected function after()
-    {
-        echo '<hr>' . 'I am invoked after';
-    }
 }
