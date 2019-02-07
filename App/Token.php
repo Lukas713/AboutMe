@@ -23,6 +23,7 @@ class Token
      * Class constructor
      * creates NEW random 16 bytes and turns them into ASCII coded
      * or assigns an existing one IF passed in
+     *
      */
     public function __construct($tokenValue = null)
     {

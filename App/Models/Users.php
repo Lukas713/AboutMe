@@ -149,7 +149,7 @@ class Users extends \Core\Model
      * creates hashed "remember me" token and when it expires
      * inserts it in databse
      *
-     * @return void
+     * @return bool
      */
     public function rememberMe(){
         $rememberMe = new Token();

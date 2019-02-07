@@ -28,4 +28,3 @@ $router->add('logout', ['controller' => 'login', 'action' => 'destroy']);
 $url = $_SERVER['QUERY_STRING'];
 /* convert URL into route and follow it */
 $router->dispatch($url);
-print_r($_SESSION);

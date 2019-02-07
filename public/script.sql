@@ -18,8 +18,7 @@ create table project
 create table user (
   id int not null primary key auto_increment,
   email varchar(100) not null,
-  password varchar(255) not null,
-  token varchar(255)
+  password varchar(255) not null
 );
 
 create table remember (

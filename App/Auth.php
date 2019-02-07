@@ -20,7 +20,7 @@ class Auth
      * create's session
      *
      * @param object, Users object returned by findByEmail()
-     * @param string, rememberMe value from Login index form
+     * @param bool, rememberMe value from Login index form (checked remember me or not)
      * @return void
      */
     public static function login($user, $rememberMe){
@@ -68,14 +68,10 @@ class Auth
 
     /**
      * get requested page or home page
-     * @return void
+     * @return string
      */
     public static function getReturnToPage(){
-
-        if(!isset($_SESSION['returnTo'])){
-            return '/';
-        }
-        return $_SESSION['returnTo'];
+        return $_SESSION['returnTo'] ?? '/';
     }
 
     /**
@@ -98,8 +94,11 @@ class Auth
         $cookie = $_COOKIE['rememberMe'] ?? false;  //Null Coalescing Operator
 
         if($cookie){
+
             $rememberMeObject = RememberedLogin::findByToken($cookie);
+
             if($rememberMeObject){
+
                 $user = Users::findById($rememberMeObject->user);
                 static::login($user, false);
                 return $user;

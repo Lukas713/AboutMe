@@ -23,7 +23,7 @@ class RememberedLogin extends \Core\Model
      */
     public static function findByToken($token){
         $token = new Token($token);
-        $token = $token->getToken();
+        $token = $token->getHash();
 
         $conn = static::connect();
         $stmt = $conn->prepare("SELECT * from remember where token = :token");
