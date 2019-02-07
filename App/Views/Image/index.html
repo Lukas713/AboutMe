@@ -1,10 +1,32 @@
 {% extends 'base.html'%}
 
+{% block footer %}
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+
+    $(document).ready(function(){
+        $("#formImg").validate({
+            rules: {
+                title: {
+                    required: true
+                },
+                image: {
+                    required: true
+                }
+            },
+            errorClass: "is-invalid"
+        });
+    });
+</script>
+{% endblock %}
+
 {% block body %}
 <div class="container" style="margin-top: 1rem; margin-bottom: 1rem;">
     <div class="row justify-content-md-center">
         <div class="col col-md-8">
-            <form method="post" enctype="multipart/form-data" action="/image/insert">
+            <form method="post" enctype="multipart/form-data" action="/image/insert" id="formImg">
                 <div class="form-group">
                     <label for="title">Image title</label>
                     <input type="text" class="form-control" id="title"  name="title">
@@ -44,12 +66,4 @@
         {% endfor %}
     {% endif %}
 </div>
-{% endblock %}
-
-{% block footer %}
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        });
-    </script>
 {% endblock %}

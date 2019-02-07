@@ -74,7 +74,6 @@ class Images extends \Core\Model
 
             $lastId = $conn->lastInsertId();
             return $this->getLastRecord($lastId);
-
         }catch (\PDOException $e){
             echo $e->getMessage();
         }
