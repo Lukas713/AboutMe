@@ -101,7 +101,7 @@ class Posts extends \Core\Model
     }
 
     /**
-     * get the result with id from parameter
+     * get the project with id from parameter
      * @return array
      */
     public static function load($id){

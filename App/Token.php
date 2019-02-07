@@ -8,7 +8,9 @@
 
 namespace App;
 
-
+/**
+ * class that holds token value inside cookie
+ */
 class Token
 {
     /**
@@ -21,8 +23,6 @@ class Token
      * Class constructor
      * creates NEW random 16 bytes and turns them into ASCII coded
      * or assigns an existing one IF passed in
-     *
-     * @return void
      */
     public function __construct($tokenValue = null)
     {

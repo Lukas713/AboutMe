@@ -22,7 +22,7 @@ create table user (
   token varchar(255)
 );
 
-create table rememberMe (
+create table remember (
   id int not null primary key auto_increment,
   token varchar(255) not null,
   expires datetime,
@@ -36,7 +36,7 @@ create table images (
   user int
 );
 
-alter table rememberMe add foreign key (user) references user(id) on delete cascade;
+alter table remember add foreign key (user) references user(id) on delete cascade;
 alter table images add foreign key (user) references user(id);
 
 insert into project (id, title, branch, link, description) values

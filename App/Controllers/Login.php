@@ -35,9 +35,8 @@ class Login extends \Core\Controller
         if(!isset($_POST['submit'])){
             $this->redirect('/login');
         }
-        if(isset($_POST['rememberMe'])){    //if remember me is checked
-            $rememberMe = $_POST['rememberMe'];
-        }
+
+        $rememberMe = isset($_POST['rememberMe']);
         $user = Users::authenticate($_POST['email'], $_POST['password']); //user is newly constructed object or false value
 
         if(!$user){
@@ -61,7 +60,7 @@ class Login extends \Core\Controller
      */
     public function destroy(){
         Auth::logout(); //destroys session
-        $this->redirect('/login/getLogoutMessage');
+       $this->redirect('/login/getLogoutMessage');
     }
 
     /**

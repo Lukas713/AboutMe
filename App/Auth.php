@@ -8,6 +8,7 @@
 
 namespace App;
 
+use App\Models\RememberedLogin;
 use \App\Models\Users;
 
 /**
@@ -26,10 +27,10 @@ class Auth
         session_regenerate_id(true); //create new session and delete's new one
         $_SESSION['userID'] = $user->id . ' - ' . $user->email;
 
-        if(!$rememberMe){
+        if(!$rememberMe || !$user->rememberMe()){
             return;
         }
-        $user->rememberMe();
+        setcookie('rememberMe', $user->token, $user->expiryDate, '/');
     }
 
     /**
@@ -78,14 +79,31 @@ class Auth
     }
 
     /**
-     * finds user by id from session
+     * finds user by from session and returns object with he's records as properties
      *
-     * @return user object or null if there is no session
+     * @return mixed, User object or null if there is no session
      */
     public static function getUser(){
         if(isset($_SESSION['userID'])){
+            //if user is logged in
             $session = explode('-', $_SESSION['userID']);
             return Users::findById($session[0]);
+            //try with remember cookie
+        }else {
+            return static::loginFromRememberMedCookie();
+        }
+    }
+
+    protected static function loginFromRememberMedCookie(){
+        $cookie = $_COOKIE['rememberMe'] ?? false;  //Null Coalescing Operator
+
+        if($cookie){
+            $rememberMeObject = RememberedLogin::findByToken($cookie);
+            if($rememberMeObject){
+                $user = Users::findById($rememberMeObject->user);
+                static::login($user, false);
+                return $user;
+            }
         }
     }
 

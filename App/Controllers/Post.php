@@ -30,7 +30,7 @@ class Post extends \Core\Controller {
     public function add(){
         $this->requireLogin();
 
-        $user = Auth::getUser();
+        $user = Auth::getUser(); //gets user object by he's email from session
         if($user->email != 'lukas.scharmitzer@gmail.com'){
             Flash::addMessage("You dont have permission to do that action", Flash::WARNING);
             $this->index();
@@ -66,7 +66,7 @@ class Post extends \Core\Controller {
     public function edit() {
         $this->requireLogin();
 
-        $user = Auth::getUser();
+        $user = Auth::getUser();    //gets user object by he's email from session
         if($user->email != 'lukas.scharmitzer@gmail.com'){
             Flash::addMessage("You dont have permission to do that", Flash::WARNING);
             $this->index();

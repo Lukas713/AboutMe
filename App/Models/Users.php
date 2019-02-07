@@ -153,14 +153,15 @@ class Users extends \Core\Model
      */
     public function rememberMe(){
         $rememberMe = new Token();
-        $hash = $rememberMe->getHash();
-        $expiryDate = time() + 60 * 60 * 24 * 10; //10 days from now
+        //set as properties
+        $this->token = $rememberMe->getHash();
+        $this->expiryDate = time() + 60 * 60 * 24 * 10; //10 days from now
 
         $conn = static::connect();
         $stmt = $conn->prepare("INSERT INTO remember(id, token, expires, user)
                                         VALUES (null, :token, :expires, :user)");
-        $stmt->bindValue("token", $hash, PDO::PARAM_STR);
-        $stmt->bindValue("expires", date('Y-m-d H:i:s', $expiryDate), PDO::PARAM_STR);
+        $stmt->bindValue("token", $this->token, PDO::PARAM_STR);
+        $stmt->bindValue("expires", date('Y-m-d H:i:s', $this->expiryDate), PDO::PARAM_STR);
         $stmt->bindValue("user", $this->id, PDO::PARAM_INT);
         return $stmt->execute();
     }

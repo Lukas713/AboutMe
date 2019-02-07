@@ -4,8 +4,6 @@ define('BP', __DIR__ . '/');
 /* require composer's autoloader */
 require '../vendor/autoload.php';
 
-ini_set('session.cookie_lifetime', '3600');
-
 /* Exception/Error handling */
 error_reporting(E_ALL); //Sets which PHP errors are reported
 set_error_handler('Core\Error::errorHandler');
@@ -30,3 +28,4 @@ $router->add('logout', ['controller' => 'login', 'action' => 'destroy']);
 $url = $_SERVER['QUERY_STRING'];
 /* convert URL into route and follow it */
 $router->dispatch($url);
+print_r($_SESSION);
