@@ -18,7 +18,15 @@ create table project
 create table user (
   id int not null primary key auto_increment,
   email varchar(100) not null,
-  password varchar(255) not null
+  password varchar(255) not null,
+  token varchar(255)
+);
+
+create table rememberMe (
+  id int not null primary key auto_increment,
+  token varchar(255) not null,
+  expires datetime,
+  user int
 );
 
 create table images (
@@ -28,6 +36,7 @@ create table images (
   user int
 );
 
+alter table rememberMe add foreign key (user) references user(id) on delete cascade;
 alter table images add foreign key (user) references user(id);
 
 insert into project (id, title, branch, link, description) values

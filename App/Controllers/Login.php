@@ -35,18 +35,21 @@ class Login extends \Core\Controller
         if(!isset($_POST['submit'])){
             $this->redirect('/login');
         }
+        if(isset($_POST['rememberMe'])){    //if remember me is checked
+            $rememberMe = $_POST['rememberMe'];
+        }
         $user = Users::authenticate($_POST['email'], $_POST['password']); //user is newly constructed object or false value
 
         if(!$user){
             Flash::addMessage('Login was unsuccessful, please try again', Flash::WARNING);
             View::render('Login/index.html', [
                 "email" => $_POST['email'],
+                "rememberMe" => $rememberMe
             ]); //if false value, go back to login page
             return;
         }
         /* set session value */
-        Auth::login($user); //create's seassion
-        $user = Auth::getUser();
+        Auth::login($user, $rememberMe); //create's session
         Flash::addMessage('Welcome ' . $user->email);   //add flash message
         $this->redirect(Auth::getReturnToPage()); //redirects user to requested page or home page
     }

@@ -17,12 +17,19 @@ class Auth
 {
     /**
      * create's session
-     * @param object
+     *
+     * @param object, Users object returned by findByEmail()
+     * @param string, rememberMe value from Login index form
      * @return void
      */
-    public static function login($user){
+    public static function login($user, $rememberMe){
         session_regenerate_id(true); //create new session and delete's new one
         $_SESSION['userID'] = $user->id . ' - ' . $user->email;
+
+        if(!$rememberMe){
+            return;
+        }
+        $user->rememberMe();
     }
 
     /**

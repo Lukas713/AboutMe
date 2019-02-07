@@ -48,6 +48,12 @@
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password">
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" name="rememberMe" {% if rememberMe %} checked="checked" {% endif %} type="checkbox" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">
+                        Remember me
+                    </label><hr>
+                </div>
                 <input type="submit" class="btn btn-primary" value="Submit" name="submit">
                 <a href="/post/index" class="btn btn-danger">Cancel</a>
             </form>

@@ -58,11 +58,11 @@ class Images extends \Core\Model
                 return false;
             }
             $userID = explode('-', $_SESSION['userID']);
-            $file = BP . 'images/' . trim($userID[1]) . "/" . $title . ".jpg";  //take file path
+            $file = BP . 'img/' . trim($userID[1]) . "/" . $title . ".jpg";  //take file path
 
             /* creates file on server*/
-            if(!file_exists(BP . 'images/' . trim($userID[1]))){
-                mkdir(BP . 'images/' . trim($userID[1]));
+            if(!file_exists(BP . 'img/' . trim($userID[1]))){
+                mkdir(BP . 'img/' . trim($userID[1]));
             }
             $conn = static::connect();
             $stmt = $conn->prepare("INSERT into images (id, path, title, user)
@@ -96,7 +96,7 @@ class Images extends \Core\Model
 
        /* removes file from server */
         $userID = explode('-', $_SESSION['userID']);
-        $file = BP . 'images/' . trim($userID[1]) . "/" . $record['title'] . ".jpg";  //take file path
+        $file = BP . 'img/' . trim($userID[1]) . "/" . $record['title'] . ".jpg";  //take file path
         unlink($file);
 
        return $stmt->execute();

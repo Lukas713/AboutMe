@@ -9,6 +9,7 @@
 namespace App\Models;
 
 use mysql_xdevapi\Exception;
+use \App\Token;
 use PDO;
 
 /**
@@ -104,7 +105,7 @@ class Users extends \Core\Model
         $stmt = $conn->prepare("SELECT * FROM user WHERE email = :email");
         $stmt->bindValue("email", $email, PDO::PARAM_STR);
         $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());  //fetch as constructed object
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());  //fetch as constructed object from class that this method is called
 
         return $stmt->fetch();  //return object, if there is no such record
     }
@@ -132,7 +133,7 @@ class Users extends \Core\Model
      * @param string, entered Email
      * @param string, entered Password
      *
-     * @return object, construct Users object if there is a record with entered email/password
+     * @return object, constructs Users object if there is a record with entered email/password
      * @return bool, record with emil/password does not exists or password is not valid
      */
     public static function authenticate($email, $password){
@@ -142,5 +143,25 @@ class Users extends \Core\Model
             return false;
         }
         return $user;
+    }
+
+    /**
+     * creates hashed "remember me" token and when it expires
+     * inserts it in databse
+     *
+     * @return void
+     */
+    public function rememberMe(){
+        $rememberMe = new Token();
+        $hash = $rememberMe->getHash();
+        $expiryDate = time() + 60 * 60 * 24 * 10; //10 days from now
+
+        $conn = static::connect();
+        $stmt = $conn->prepare("INSERT INTO remember(id, token, expires, user)
+                                        VALUES (null, :token, :expires, :user)");
+        $stmt->bindValue("token", $hash, PDO::PARAM_STR);
+        $stmt->bindValue("expires", date('Y-m-d H:i:s', $expiryDate), PDO::PARAM_STR);
+        $stmt->bindValue("user", $this->id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }
