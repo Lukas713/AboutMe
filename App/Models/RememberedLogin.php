@@ -33,4 +33,14 @@ class RememberedLogin extends \Core\Model
         $stmt->execute();
         return $stmt->fetch();
     }
+
+    /**
+     * converts string format Y-m-d H:i:s into current Unix timestamp
+     * and compares it with "beginning of time"
+     *
+     * @return bool
+     */
+    public function hasExpired(){
+        return strtotime($this->expires) < time();
+    }
 }

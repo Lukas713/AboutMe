@@ -100,9 +100,10 @@ class Auth
         if(!$cookie){
             return null;
         }
+        //rememberedLogin object
         $cookieObject = RememberedLogin::findByToken($cookie);  //fetch cookie record from DB
 
-        if(!$cookieObject){
+        if(!$cookieObject || !$cookieObject->hasExpired()){
             return null;
         }
         $user = Users::findById($cookieObject->user);
