@@ -36,7 +36,7 @@ class Login extends \Core\Controller
             $this->redirect('/login');
         }
 
-        $rememberMe = isset($_POST['rememberMe']);
+        $rememberMe = isset($_POST['rememberMe']);  //user chose remember me or not
         $user = Users::authenticate($_POST['email'], $_POST['password']); //user is newly constructed object or false value
 
         if(!$user){

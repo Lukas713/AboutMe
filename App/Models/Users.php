@@ -133,8 +133,8 @@ class Users extends \Core\Model
      * @param string, entered Email
      * @param string, entered Password
      *
+     * @return bool, record with email/password does not exists or password is not valid
      * @return object, constructs Users object if there is a record with entered email/password
-     * @return bool, record with emil/password does not exists or password is not valid
      */
     public static function authenticate($email, $password){
         $user = self::findByEmail($email);
@@ -146,21 +146,22 @@ class Users extends \Core\Model
     }
 
     /**
-     * creates hashed "remember me" token and when it expires
-     * inserts it in databse
+     * creates hashed "remember me" token and date when it will expire.
+     * Inserts hashed token inside database
      *
      * @return bool
      */
     public function rememberMe(){
         $rememberMe = new Token();
         //set as properties
-        $this->token = $rememberMe->getHash();
+        $this->hashedToken = $rememberMe->getHash(); //hashed token for database insert
+        $this->token = $rememberMe->getToken(); //token
         $this->expiryDate = time() + 60 * 60 * 24 * 10; //10 days from now
 
         $conn = static::connect();
         $stmt = $conn->prepare("INSERT INTO remember(id, token, expires, user)
                                         VALUES (null, :token, :expires, :user)");
-        $stmt->bindValue("token", $this->token, PDO::PARAM_STR);
+        $stmt->bindValue("token", $this->hashedToken, PDO::PARAM_STR);
         $stmt->bindValue("expires", date('Y-m-d H:i:s', $this->expiryDate), PDO::PARAM_STR);
         $stmt->bindValue("user", $this->id, PDO::PARAM_INT);
         return $stmt->execute();

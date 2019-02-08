@@ -24,6 +24,9 @@ $router->add('signup', ['controller' => 'signup', 'action' => 'index']);
 $router->add('login', ['controller' => 'login', 'action' => 'index']);
 $router->add('logout', ['controller' => 'login', 'action' => 'destroy']);
 
+print_r($_COOKIE);
+echo '<hr>';
+print_r($_SESSION);
 /* catching the entered URL */
 $url = $_SERVER['QUERY_STRING'];
 /* convert URL into route and follow it */

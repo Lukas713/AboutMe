@@ -89,21 +89,25 @@ class Auth
             return static::loginFromRememberMedCookie();
         }
     }
-
+    /**
+     * invoked when server checks if user is logged OR there is a cookie session
+     * takes value from cookie and
+     *
+     */
     protected static function loginFromRememberMedCookie(){
-        $cookie = $_COOKIE['rememberMe'] ?? false;  //Null Coalescing Operator
+        $cookie = $_COOKIE['rememberMe'] ?? false;  //cookie value string or false value
 
-        if($cookie){
-
-            $rememberMeObject = RememberedLogin::findByToken($cookie);
-
-            if($rememberMeObject){
-
-                $user = Users::findById($rememberMeObject->user);
-                static::login($user, false);
-                return $user;
-            }
+        if(!$cookie){
+            return null;
         }
+        $cookieObject = RememberedLogin::findByToken($cookie);  //fetch cookie record from DB
+
+        if(!$cookieObject){
+            return null;
+        }
+        $user = Users::findById($cookieObject->user);
+        static::login($user, false);    //RECREATE session id
+        return $user;
     }
 
 }

@@ -18,7 +18,6 @@ class View
      *
      * @param string template, The template file
      * @param array $arguments, Assoc array of data to display in the view (optional)
-     *
      * @return void
      */
     public static function render($template, $arguments = []){
