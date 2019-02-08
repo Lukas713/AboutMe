@@ -46,7 +46,7 @@ class RememberedLogin extends \Core\Model
 
     /**
      * delete's cookie from database
-     * 
+     *
      * @return void
      */
     public function delete(){

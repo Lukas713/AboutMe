@@ -13,6 +13,8 @@ class Home extends \Core\Controller {
      * @return void
      */
     public function index(){
+        \App\Mail::send("lukas.scharmitzer@gmail.com", "First email", "This is first email", '<h1>This is a test</h1>');
+
         View::render('Home/index.html');
     }
 
