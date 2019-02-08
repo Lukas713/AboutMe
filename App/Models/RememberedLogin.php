@@ -43,4 +43,16 @@ class RememberedLogin extends \Core\Model
     public function hasExpired(){
         return strtotime($this->expires) < time();
     }
+
+    /**
+     * delete's cookie from database
+     * 
+     * @return void
+     */
+    public function delete(){
+        $conn = static::connect();
+        $stmt = $conn->prepare("DELETE FROM remember where token = :token");
+        $stmt->bindValue("token", $this->token, PDO::PARAM_STR);
+        $stmt->execute();
+    }
 }

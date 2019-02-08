@@ -56,6 +56,7 @@ class Auth
         }
         // Finally, destroy the session.
         session_destroy();
+        static::forgetLogin(); //removes cookie
     }
 
     /**
@@ -86,7 +87,7 @@ class Auth
             return Users::findById($session[0]);
             //try with remember cookie
         }else {
-            return static::loginFromRememberMedCookie();
+            return static::loginFromRememberMeCookie();
         }
     }
     /**
@@ -94,7 +95,7 @@ class Auth
      * takes value from cookie and
      *
      */
-    protected static function loginFromRememberMedCookie(){
+    protected static function loginFromRememberMeCookie(){
         $cookie = $_COOKIE['rememberMe'] ?? false;  //cookie value string or false value
 
         if(!$cookie){
@@ -109,6 +110,30 @@ class Auth
         $user = Users::findById($cookieObject->user);
         static::login($user, false);    //RECREATE session id
         return $user;
+    }
+
+    /**
+     * gets cookie from $_COOKIE,
+     * constructs object with properties from DB and methods from RememberedLogin class
+     * invoke delete() method that delete's cookie record from database
+     * and sets cookie expire date to past so it is not valid anymore
+     *
+     * @return void
+     */
+    protected static function forgetLogin() {
+        $cookie = $_COOKIE['rememberMe'] ?? false;  //cookie value string or false value
+
+        if(!$cookie){
+            return null;
+        }
+        //rememberedLogin object
+        $cookieObject = RememberedLogin::findByToken($cookie);  //fetch cookie record from DB
+
+        if(!$cookieObject){
+            return null;
+        }
+        $cookieObject->delete();
+        setcookie("rememberMe", "", time() - 3600); //set to expire in the past
     }
 
 }
