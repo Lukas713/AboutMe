@@ -40,7 +40,6 @@ class Signup extends \Core\Controller
                 ]);
                 return;
             }
-
             if(isset($_FILES['image'])){    //if image is uploaded
                 if($_FILES['image']['error'] > 0){
                     Flash::addMessage("Something went wrong with uploading image, please try again", Flash::INFO);

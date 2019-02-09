@@ -9,7 +9,6 @@
 namespace App\Controllers;
 
 use Core\View;
-use App\Models\Users;
 
 class Profile extends Authenticated
 {

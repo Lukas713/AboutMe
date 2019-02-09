@@ -46,12 +46,14 @@ class Users extends \Core\Model
         }
         $passwordHash = password_hash($this->password, PASSWORD_DEFAULT);
 
+        $file = $this->email . "/" . 'profile' . ".jpg";
         $conn = static::connect();
-        $stmt = $conn->prepare("INSERT into user (id, firstname, lastname, email, password) VALUES (null, :firstname, :lastname, :email, :password)");
+        $stmt = $conn->prepare("INSERT into user (id, firstname, lastname, email, password, profile) VALUES (null, :firstname, :lastname, :email, :password, :profile)");
         $stmt->bindValue("firstname", $this->fname, PDO::PARAM_STR);
         $stmt->bindValue("lastname", $this->lname, PDO::PARAM_STR);
         $stmt->bindValue("email", $this->email, PDO::PARAM_STR);
         $stmt->bindValue("password", $passwordHash, PDO::PARAM_STR);
+        $stmt->bindValue("profile", $file, PDO::PARAM_STR);
 
         if(!$stmt->execute()){
             return false;
@@ -186,6 +188,9 @@ class Users extends \Core\Model
 
     /**
      * validates if image format is wrong
+     * inserts record in database
+     * moves file from temp position
+     *
      * @return bool
      */
     public function validateImageAndInsert($fileArray){
