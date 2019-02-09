@@ -45,7 +45,9 @@ class Users extends \Core\Model
         $passwordHash = password_hash($this->password, PASSWORD_DEFAULT);
 
         $conn = static::connect();
-        $stmt = $conn->prepare("INSERT into user (id, email, password) VALUES (null, :email, :password)");
+        $stmt = $conn->prepare("INSERT into user (id, firstname, lastname, email, password) VALUES (null, :firstname, :lastname, :email, :password)");
+        $stmt->bindValue("firstname", $this->fname, PDO::PARAM_STR);
+        $stmt->bindValue("lastname", $this->lname, PDO::PARAM_STR);
         $stmt->bindValue("email", $this->email, PDO::PARAM_STR);
         $stmt->bindValue("password", $passwordHash, PDO::PARAM_STR);
 
@@ -57,6 +59,15 @@ class Users extends \Core\Model
      * @return void
      */
     protected function validate(){
+        //validate firstname
+        if(filter_var($this->fname, FILTER_SANITIZE_STRING) === false){
+            $this->errors[] = 'Invalid first name';
+        }
+
+        if(filter_var($this->lname, FILTER_SANITIZE_STRING) === false){
+            $this->errors[] = 'Invalid last name';
+        }
+
         //validate email
         if(filter_var($this->email, FILTER_VALIDATE_EMAIL) === false){
             $this->errors[] = 'Invalid email';

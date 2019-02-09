@@ -30,6 +30,7 @@ class Signup extends \Core\Controller
      */
     public function create(){
         if(isset($_POST['submit'])){
+
             $user_m = new Users($_POST);    //init object from User model
 
             if(!$user_m->save()){

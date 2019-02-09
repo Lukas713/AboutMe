@@ -17,6 +17,8 @@ create table project
 
 create table user (
   id int not null primary key auto_increment,
+  firstname varchar(20),
+  lastname varchar(20),
   email varchar(100) not null,
   password varchar(255) not null
 );

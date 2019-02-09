@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Controllers;
+
 use \Core\View;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 /**
  * Home controller that renders front page
@@ -13,8 +16,6 @@ class Home extends \Core\Controller {
      * @return void
      */
     public function index(){
-        \App\Mail::send("lukas.scharmitzer@gmail.com", "First email", "This is first email", '<h1>This is a test</h1>');
-
         View::render('Home/index.html');
     }
 
@@ -27,4 +28,5 @@ class Home extends \Core\Controller {
     {
        //i am invoked after index
     }
+
 }

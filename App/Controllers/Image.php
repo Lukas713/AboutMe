@@ -51,10 +51,10 @@ class Image extends Authenticated
     }
 
     /**
-     * stops if form is submitted, if image is not sent and if there is errors
-     * sends array to method that validates image format
-     * creates object from model and invokes method that inserts record inside database
-     * moves file from temp into new location
+     * stops if form is submitted, if image is not sent and if there is errors.
+     * sends array to method that validates image format.
+     * creates object from model and invokes method that inserts record inside database.
+     * moves file from temp into new location.
      *
      * @return void
      */
