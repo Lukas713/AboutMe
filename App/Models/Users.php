@@ -10,6 +10,8 @@ namespace App\Models;
 
 use mysql_xdevapi\Exception;
 use \App\Token;
+use \APP\Flash;
+use \App\Controllers\Image;
 use PDO;
 
 /**
@@ -51,7 +53,11 @@ class Users extends \Core\Model
         $stmt->bindValue("email", $this->email, PDO::PARAM_STR);
         $stmt->bindValue("password", $passwordHash, PDO::PARAM_STR);
 
-        return $stmt->execute();
+        if(!$stmt->execute()){
+            return false;
+        }
+        $this->id = $conn->lastInsertId();
+        return true;
     }
 
     /**
@@ -177,4 +183,29 @@ class Users extends \Core\Model
         $stmt->bindValue("user", $this->id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    /**
+     * validates if image format is wrong
+     * @return bool
+     */
+    public function validateImageAndInsert($fileArray){
+        if(!exif_imagetype($fileArray['image']['tmp_name'])){
+            Flash::addMessage("Image format is wrong", Flash::INFO);
+            return false;
+        }
+        $file = BP . 'img/' . $this->email . "/" . 'profile' . ".jpg";  //take file path
+        mkdir(BP . 'img/' . $this->email);
+
+        $conn = static::connect();
+        $stmt = $conn->prepare("INSERT into images (id, path, title, user)
+                                            VALUES (null, :path, :title, :user)");
+        $stmt->bindValue('path', $file, PDO::PARAM_STR);
+        $stmt->bindValue('title', 'profile', PDO::PARAM_STR);
+        $stmt->bindValue('user', $this->id, PDO::PARAM_INT);
+
+        move_uploaded_file($_FILES["image"]["tmp_name"], BP . 'img/' . $this->email . '/profile.jpg');
+        return $stmt->execute();
+    }
+
+
 }

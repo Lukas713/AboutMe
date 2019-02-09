@@ -8,6 +8,8 @@
 
 namespace App\Controllers;
 
+use App\Config;
+use App\Flash;
 use App\Models\Users;
 use Core\View;
 
@@ -30,7 +32,6 @@ class Signup extends \Core\Controller
      */
     public function create(){
         if(isset($_POST['submit'])){
-
             $user_m = new Users($_POST);    //init object from User model
 
             if(!$user_m->save()){
@@ -38,6 +39,18 @@ class Signup extends \Core\Controller
                     "user" => $user_m   //render view with errors as PUBLIC properties
                 ]);
                 return;
+            }
+
+            if(isset($_FILES['image'])){    //if image is uploaded
+                if($_FILES['image']['error'] > 0){
+                    Flash::addMessage("Something went wrong with uploading image, please try again", Flash::INFO);
+                    View::render('Signup/index.html');
+                    return;
+                }
+                if(!$user_m->validateImageAndInsert($_FILES)){
+                    View::render('Signup/index.html');
+                    return;
+                }
             }
             $this->redirect('/signup/success');
         }

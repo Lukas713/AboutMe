@@ -104,10 +104,11 @@ class Auth
         //rememberedLogin object
         $cookieObject = RememberedLogin::findByToken($cookie);  //fetch cookie record from DB
 
-        if(!$cookieObject || !$cookieObject->hasExpired()){
+        if(!$cookieObject){
             return null;
         }
         $user = Users::findById($cookieObject->user);
+
         static::login($user, false);    //RECREATE session id
         return $user;
     }
