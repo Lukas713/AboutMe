@@ -79,7 +79,7 @@ class Image extends Authenticated
             ]);
             return;
         }
-        if(!$this->compress($_FILES['image']['tmp_name'], $record['path'], 90)){
+        if(!$this->compress($_FILES['image']['tmp_name'], $record['path'])){
             $this->redirect('/image/index');
         }
         Flash::addMessage("Successful upload");
@@ -109,23 +109,50 @@ class Image extends Authenticated
      *
      * @return bool, true if image is successfully created, false otherwise
      */
-    protected function compress($source, $destination, $quality){
+    protected function compress($source, $destination){
         $info = getimagesize($source);  //get infos about image (height, width...)
         //Create a new image from file or URL
-        if($info['mime'] == 'image/jpeg'){
+        if($info['mime'] == 'image/jpeg' || $info['mime'] == 'image/jpg'){
             $image = imagecreatefromjpeg($source);
+            $suffix = 'jpeg';
 
-        }else if($info['mime'] == 'image/png'){
+        }else if($info['mime'] == 'image/png' || $info['mime'] == 'image/PNG'){
             $image = imagecreatefrompng($source);
+            $suffix = 'png';
 
         }else if($info['mime'] == 'image/gif'){
             $image = imagecreatefromgif($source);
+            $suffix = 'jpeg';
         }
         if(!$image){
             Flash::addMessage("Something went wrong, please try again", Flash::INFO);
             return false;
         }
-        imagejpeg($image, $destination, $quality); //Output image to browser or file
+        $this->createThumbnail($image, $suffix, $destination);
         return true;
+    }
+
+    /**
+     * creates Thumbnail using GD
+     * @param string, $Image is image source
+     * @param string, $suffix is image extension
+     * @param string, $destination is a location where file will be located
+     *
+     * @return void
+     */
+    protected function createThumbnail($image, $suffix, $destination){
+        $width = imagesx($image);   //get width of image
+        $height = imagesy($image);  //get height of image
+        $desiredHeight = floor($height * (400 / $width));
+        /* create a new, "virtual" image */
+        $virtualImage = imagecreatetruecolor(400, $desiredHeight);
+        /* copy source image at a resized size */
+        imagecopyresampled($virtualImage, $image, 0, 0, 0, 0, 400, $desiredHeight, $width, $height);
+
+        if($suffix == 'png' || $suffix == 'PNG'){
+            imagepng($virtualImage, $destination);
+        }else {
+            imagejpeg($virtualImage, $destination);
+        }
     }
 }

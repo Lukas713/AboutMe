@@ -35,7 +35,8 @@ class Images extends \Core\Model
     public static function getAll(){
         $userID = explode('-', $_SESSION['userID']);
         $conn = static::connect();
-        $stmt = $conn->prepare("SELECT * FROM images WHERE user = :user
+        $stmt = $conn->prepare("SELECT id, path, SUBSTRING_INDEX(title, '&', 1) as title, user 
+                                        from images WHERE user = :user
                                         ORDER BY id DESC");
         $stmt->bindValue("user", $userID[0], PDO::PARAM_INT);
         $stmt->execute();
@@ -44,6 +45,31 @@ class Images extends \Core\Model
         return self::convertPath($result);
     }
 
+    protected function insertPreworkout($title){
+        $this->validateTitle($title);
+
+        if(!empty($this->errors)){
+            return false;
+        }
+
+        //set random string in image's title
+        $title .= '&' . bin2hex(random_bytes(5));
+
+        $userFile = explode('-', $_SESSION['userID']);
+
+        if(!$this->isItJpg()){
+            $file = BP . 'img/' . trim($userFile[1]) . "/" . $title . ".png";  //take file path
+        }else {
+            $file = BP . 'img/' . trim($userFile[1]) . "/" . $title . ".jpg";  //take file path
+        }
+
+        if(!file_exists(BP . 'img/' . trim($userFile[1]))){
+            mkdir(BP . 'img/' . trim($userFile[1]));
+        }
+        $userFile[1] = $file;
+        $userFile[2] = $title;
+        return $userFile;
+    }
 
     /**
      * insert image into database
@@ -52,28 +78,20 @@ class Images extends \Core\Model
      */
     public function insert($title){
         try {
-            $this->validateTitle($title);   //validate title input
-
-            if(!empty($this->errors)){
+            $userFile = $this->insertPreworkout($title);
+            if(!$userFile){
                 return false;
-            }
-            $userID = explode('-', $_SESSION['userID']);
-            $file = BP . 'img/' . trim($userID[1]) . "/" . $title . ".jpg";  //take file path
-
-            /* creates file on server*/
-            if(!file_exists(BP . 'img/' . trim($userID[1]))){
-                mkdir(BP . 'img/' . trim($userID[1]));
             }
             $conn = static::connect();
             $stmt = $conn->prepare("INSERT into images (id, path, title, user)
                                             VALUES (null, :path, :title, :user)");
-            $stmt->bindValue('path', $file, PDO::PARAM_STR);
-            $stmt->bindValue('title', $title, PDO::PARAM_STR);
-            $stmt->bindValue('user', $userID[0], PDO::PARAM_INT);
+            $stmt->bindValue('path', $userFile[1], PDO::PARAM_STR);
+            $stmt->bindValue('title', $userFile[2], PDO::PARAM_STR);
+            $stmt->bindValue('user', $userFile[0], PDO::PARAM_INT);
             $stmt->execute();
 
             $lastId = $conn->lastInsertId();
-            return $this->getLastRecord($lastId);
+            return $this->getImageWithId($lastId);
         }catch (\PDOException $e){
             echo $e->getMessage();
         }
@@ -85,7 +103,7 @@ class Images extends \Core\Model
      * @return bool
      */
     public function delete(){
-        $record = $this->getLastRecord($this->id);
+        $record = $this->getImageWithId($this->id);
         if(!$record){
             return false;
         }
@@ -93,12 +111,9 @@ class Images extends \Core\Model
         $stmt = $conn->prepare("DELETE FROM images WHERE id = :id");
         $stmt->bindValue("id", $record['id'], PDO::PARAM_INT);
 
-       /* removes file from server */
-        $userID = explode('-', $_SESSION['userID']);
-        $file = BP . 'img/' . trim($userID[1]) . "/" . $record['title'] . ".jpg";  //take file path
-        unlink($file);
-
-       return $stmt->execute();
+        /* removes file from server */
+        unlink($record['path']);
+        return $stmt->execute();
     }
 
     /**
@@ -107,7 +122,7 @@ class Images extends \Core\Model
      * @param int last inserted id
      * @return mixed, false if there is no records, assoc array if there is one
      */
-    protected function getLastRecord($id){
+    protected function getImageWithId($id){
         $conn = static::connect();
         $stmt = $conn->prepare("SELECT * FROM images where id=:id");
         $stmt->bindValue('id', $id, PDO::PARAM_INT);
@@ -132,6 +147,10 @@ class Images extends \Core\Model
         if(strlen($title) > 20){
             $this->errors[] = 'Title mut have maximum 20 characters';
         }
+        /* title is letters and numbers */
+        if(ctype_alnum($title) == false){
+            $this->errors[] = 'Title mut contain only letters and numbers';
+        }
     }
 
     /**
@@ -148,5 +167,17 @@ class Images extends \Core\Model
             }
         }
         return $records;
+    }
+
+    /**
+     * method that checks if file is jpg
+     *
+     * @return bool
+     */
+    protected function isItJpg(){
+        if(exif_imagetype($this->tmp_name) != IMAGETYPE_JPEG){
+            return false;
+        }
+        return true;
     }
 }

@@ -202,8 +202,8 @@ class Users extends \Core\Model
         mkdir(BP . 'img/' . $this->email);
 
         $conn = static::connect();
-        $stmt = $conn->prepare("INSERT into images (id, path, title, user)
-                                            VALUES (null, :path, :title, :user)");
+        $stmt = $conn->prepare('INSERT into images (id, path, title, user)
+                                            VALUES (null, :path, :title, :user)');
         $stmt->bindValue('path', $file, PDO::PARAM_STR);
         $stmt->bindValue('title', 'profile', PDO::PARAM_STR);
         $stmt->bindValue('user', $this->id, PDO::PARAM_INT);
