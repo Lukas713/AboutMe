@@ -2,6 +2,24 @@
 
 {% block title %}Profile{% endblock %}
 
+{% block footer %}
+<script>
+    $(document).ready(function(){
+        $("#formImg").validate({
+            rules: {
+                title: {
+                    required: true
+                },
+                image: {
+                    required: true
+                }
+            },
+            errorClass: "is-invalid"
+        });
+    });
+</script>
+{% endblock %}
+
 {% block body %}
 <div class="container">
     <div class="row">
@@ -12,13 +30,6 @@
                         <div class="d-flex justify-content-start">
                             <div class="image-container">
                                 <img src="../../../img/{{currentUser.profile}}"  title="profile" alt="profile" style="width: 150px; height: 150px" class="img-thumbnail">
-                            </div>
-                            <div class="userData ml-3">
-                                <br>
-                                <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold">{{currentUser.email}}</h2>
-                            </div>
-                            <div class="ml-auto">
-                                <input type="button" class="btn btn-primary d-none" id="btnDiscard" value="Discard Changes" />
                             </div>
                         </div>
                     </div>
@@ -31,23 +42,57 @@
                                 <li class="nav-item">
                                     <a class="nav-link" id="connectedServices-tab" data-toggle="tab" href="#connectedServices" role="tab" aria-controls="connectedServices" aria-selected="false">Edit profile</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="connectedServices-tab2" data-toggle="tab" href="#connectedServices2" role="tab" aria-controls="connectedServices2" aria-selected="false">Upload image</a>
+                                </li>
                             </ul>
                             <div class="tab-content ml-1" id="myTabContent">
                                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-
-
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Email adress</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            {{currentUser.email}} <hr>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-sm-3 col-md-2 col-5">
                                             <label style="font-weight:bold;">Full Name</label>
                                         </div>
                                         <div class="col-md-8 col-6">
-                                            {{currentUser.firstname}} {{currentUser.lastname}}
+                                            {{currentUser.firstname}} {{currentUser.lastname}}<hr>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;">Album</label>
+                                        </div>
+                                        <div class="col-md-8 col-6">
+                                            <a href=""><i class="fas fa-2x fa-images"></i></a><hr>
                                         </div>
                                     </div>
                                     <hr />
                                 </div>
                                 <div class="tab-pane fade" id="connectedServices" role="tabpanel" aria-labelledby="ConnectedServices-tab">
                                     Ovdje će biti forma za edit
+                                </div>
+                                <div class="tab-pane fade" id="connectedServices2" role="tabpanel" aria-labelledby="ConnectedServices-tab2">
+                                    <div class="row justify-content-md-center">
+                                        <div class="col col-md-8">
+                                            <form method="post" enctype="multipart/form-data" action="/profile/insert" id="formImg">
+                                                <div class="form-group">
+                                                    <label for="title">Image title</label>
+                                                    <input type="text" class="form-control" id="title"  name="title">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="image">Upload image</label>
+                                                    <input type="file" class="form-control-file" id="image" name="image">
+                                                </div>
+                                                <input type="submit" class="btn btn-primary" value="Submit" name="submit">
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

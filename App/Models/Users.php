@@ -217,7 +217,7 @@ class Users extends \Core\Model
      */
     public function insertDefaultImg(){
         mkdir(BP . 'img/' . $this->email);
-        $imgID = '/' . rand(1, 5) . '.png';
+        $imgID = '/' . rand(1, 4) . '.png';
         $userPath = BP . 'img/' . $this->email;
         //insert into database
         $this->setProfileInDatabase($this->email . $imgID);
