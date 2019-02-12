@@ -11,7 +11,6 @@ namespace App\Models;
 use mysql_xdevapi\Exception;
 use \App\Token;
 use \APP\Flash;
-use \App\Controllers\Image;
 use PDO;
 
 /**
@@ -39,22 +38,16 @@ class Users extends \Core\Model
      * @return bool
      */
     public function save(){
-
         $this->validate();
         if(!empty($this->errors)){
             return false;
         }
-        $passwordHash = password_hash($this->password, PASSWORD_DEFAULT);
-
-        $file = $this->email . "/" . 'profile' . ".jpg";
         $conn = static::connect();
-        $stmt = $conn->prepare("INSERT into user (id, firstname, lastname, email, password, profile) VALUES (null, :firstname, :lastname, :email, :password, :profile)");
+        $stmt = $conn->prepare("INSERT into user (id, firstname, lastname, email, password) VALUES (null, :firstname, :lastname, :email, :password)");
         $stmt->bindValue("firstname", $this->fname, PDO::PARAM_STR);
         $stmt->bindValue("lastname", $this->lname, PDO::PARAM_STR);
         $stmt->bindValue("email", $this->email, PDO::PARAM_STR);
-        $stmt->bindValue("password", $passwordHash, PDO::PARAM_STR);
-        $stmt->bindValue("profile", $file, PDO::PARAM_STR);
-
+        $stmt->bindValue("password", $this->password, PDO::PARAM_STR);
         if(!$stmt->execute()){
             return false;
         }
@@ -157,7 +150,6 @@ class Users extends \Core\Model
      */
     public static function authenticate($email, $password){
         $user = self::findByEmail($email);
-
         if(!$user || !password_verify($password, $user->password)){
             return false;
         }
@@ -198,19 +190,52 @@ class Users extends \Core\Model
             Flash::addMessage("Image format is wrong", Flash::INFO);
             return false;
         }
-        $file = BP . 'img/' . $this->email . "/" . 'profile' . ".jpg";  //take file path
+        //check if image is jpg
+        if(!Images::isItJpg($fileArray['image']['tmp_name'])){
+            $extension = '.png';
+        }else {
+            $extension = '.jpg';
+        }
+        $file = BP . 'img/' . $this->email . '/profile' . $extension;
         mkdir(BP . 'img/' . $this->email);
-
         $conn = static::connect();
         $stmt = $conn->prepare('INSERT into images (id, path, title, user)
                                             VALUES (null, :path, :title, :user)');
         $stmt->bindValue('path', $file, PDO::PARAM_STR);
         $stmt->bindValue('title', 'profile', PDO::PARAM_STR);
         $stmt->bindValue('user', $this->id, PDO::PARAM_INT);
-
-        move_uploaded_file($_FILES["image"]["tmp_name"], BP . 'img/' . $this->email . '/profile.jpg');
+        //set profile image for the user
+        $this->setProfileInDatabase($this->email . '/profile' . $extension);
+        move_uploaded_file($_FILES["image"]["tmp_name"], $file);
         return $stmt->execute();
     }
 
+    /**
+     * inserts one of defaults images
+     *
+     * @return void
+     */
+    public function insertDefaultImg(){
+        mkdir(BP . 'img/' . $this->email);
+        $imgID = '/' . rand(1, 5) . '.png';
+        $userPath = BP . 'img/' . $this->email;
+        //insert into database
+        $this->setProfileInDatabase($this->email . $imgID);
+        copy(BP . 'img/default' . $imgID, $userPath . $imgID);
+    }
 
+    /**
+     * method that adds profile image for the user inside user record
+     *
+     * @param string, email with extension (.png or .jpg)
+     * @return void
+     */
+    protected function setProfileInDatabase($path){
+        $conn = static::connect();
+        $stmt = $conn->prepare('UPDATE user SET profile = :profile 
+                                        WHERE id = :id ');
+        $stmt->bindValue("id", $this->id, PDO::PARAM_INT);
+        $stmt->bindValue('profile', $path, PDO::PARAM_STR);
+        $stmt->execute();
+    }
 }

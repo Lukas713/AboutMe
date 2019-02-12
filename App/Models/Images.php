@@ -57,7 +57,7 @@ class Images extends \Core\Model
 
         $userFile = explode('-', $_SESSION['userID']);
 
-        if(!$this->isItJpg()){
+        if(!self::isItJpg($this->tmp_name)){
             $file = BP . 'img/' . trim($userFile[1]) . "/" . $title . ".png";  //take file path
         }else {
             $file = BP . 'img/' . trim($userFile[1]) . "/" . $title . ".jpg";  //take file path
@@ -172,10 +172,11 @@ class Images extends \Core\Model
     /**
      * method that checks if file is jpg
      *
+     * @param string, nae of the image
      * @return bool
      */
-    protected function isItJpg(){
-        if(exif_imagetype($this->tmp_name) != IMAGETYPE_JPEG){
+    public static function isItJpg($tmpName){
+        if(exif_imagetype($tmpName) != IMAGETYPE_JPEG){
             return false;
         }
         return true;
