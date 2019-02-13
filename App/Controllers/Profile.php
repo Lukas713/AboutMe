@@ -23,6 +23,10 @@ class Profile extends Authenticated
         View::render("Profile/index.html");
     }
 
+    public function album(){
+        View::render("Profile/album.html");
+    }
+
     /**
      * stops if form is submitted, if image is not sent and if there is errors.
      * sends array to method that validates image format.

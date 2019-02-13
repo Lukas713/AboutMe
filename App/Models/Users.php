@@ -197,7 +197,7 @@ class Users extends \Core\Model
             $extension = '.jpg';
         }
         $file = BP . 'img/' . $this->email . '/profile' . $extension;
-        mkdir(BP . 'img/' . $this->email);
+        mkdir(BP . 'img/' . $this->email, 755, true);
         $conn = static::connect();
         $stmt = $conn->prepare('INSERT into images (id, path, title, user)
                                             VALUES (null, :path, :title, :user)');
@@ -216,7 +216,7 @@ class Users extends \Core\Model
      * @return void
      */
     public function insertDefaultImg(){
-        mkdir(BP . 'img/' . $this->email);
+        mkdir(BP . 'img/' . $this->email, 755, true);
         $imgID = '/' . rand(1, 4) . '.png';
         $userPath = BP . 'img/' . $this->email;
         //insert into database
