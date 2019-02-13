@@ -4,7 +4,7 @@
 
 {% block body %}
 {% if currentUser %}
-    {{currentUser.email}}
+ <a style="float:right; margin-right:2rem;"href="/profile/index">{{currentUser.email}}</a>
 {% endif %}
 <br>
 <div class="container" style="font-size: large;">
@@ -23,6 +23,7 @@
         <div class="col col-md-7" style="text-align:center;">
             <a href="https://github.com/Lukas713"><i class="fab fa-2x fa-github"></i></a>
             <a href="mailto:lukas.scharmitzer@gmail.com"><i class="fas fa-2x fa-envelope"></i></a>
+            <a href="https://www.linkedin.com/in/lukas-scharmitzer-71942416b/"><i class="fab fa-2x fa-linkedin"></i></a>
         </div>
     </div>
 </div>
