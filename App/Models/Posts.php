@@ -58,16 +58,16 @@ class Posts extends \Core\Model
             if(!empty($this->errors)){
                 return false;
             }
-
             if(!$this->projectExist($this->title)){  //invoke method that checks if record exists
                 $conn = static::connect();
                 $stmt = $conn->prepare("INSERT into project (id, title, branch, link, description) 
-                                             VALUES (null, :title, :branch, :link, :description)");
+                                                VALUES (null, :title, :branch, :link, :description)");
                 $stmt->bindValue("title", $this->title, PDO::PARAM_STR);
                 $stmt->bindValue("branch", $this->branch, PDO::PARAM_STR);
                 $stmt->bindValue("link", $this->link, PDO::PARAM_STR);
                 $stmt->bindValue("description", $this->description, PDO::PARAM_STR);
-                return true;
+
+                return $stmt->execute();
             }
             return false;
         }catch(\PDOException $e){
@@ -93,7 +93,6 @@ class Posts extends \Core\Model
             $stmt->bindValue("link", $this->link, PDO::PARAM_STR);
             $stmt->bindValue("description", $this->description, PDO::PARAM_STR);
             $stmt->bindValue("id", $this->id, PDO::PARAM_STR);
-
             return $stmt->execute();
         }catch(\PDOException $e){
             echo $e->getMessage();

@@ -29,7 +29,6 @@ class Post extends \Core\Controller {
      */
     public function add(){
         $this->requireLogin();
-
         $user = Auth::getUser(); //gets user object by he's email from session
         if($user->email != 'lukas.scharmitzer@gmail.com'){
             Flash::addMessage("You dont have permission to do that action", Flash::WARNING);
@@ -46,7 +45,6 @@ class Post extends \Core\Controller {
     public function insert(){
         if(isset($_POST['submit'])){
             $post_m = new Posts($_POST);    //instantiate model object
-
             if(!$post_m->insert()){ //invoke model's method
                 View::render('Post/add.html', [
                     "admin" => $post_m
