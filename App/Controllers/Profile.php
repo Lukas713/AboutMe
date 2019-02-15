@@ -8,6 +8,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Users;
 use \Core\View;
 use \App\Models\Images;
 use \App\Flash;
@@ -130,6 +131,20 @@ class Profile extends Authenticated
             imagepng($virtualImage, $destination);
         }else {
             imagejpeg($virtualImage, $destination);
+        }
+    }
+
+    /**
+     * gets user's ide from session, creates model object and invoke update method
+     * @return void
+     */
+    public function update(){
+        if(isset($_POST['update'])){
+            $userID = explode(" -", $_SESSION['userID']);
+            $_POST['id'] = $userID[0];
+            $user_m = new Users($_POST);
+            $user_m->update();
+            echo 'good job';
         }
     }
 }

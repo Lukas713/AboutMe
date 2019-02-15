@@ -16,7 +16,49 @@
             },
             errorClass: "is-invalid"
         });
+        updateBasicInfo();
     });
+
+    /**
+     * function that sens inputs on server, updates profile and display status message
+     */
+    function updateBasicInfo(){
+        $("#update").click(function(){  //when user clicks update button
+            var x = document.getElementById("messageDiv");  //get div where message resides
+            if(x.children.length > 0){  //if there is element
+                var t = document.getElementById("message");
+                x.removeChild(t);    //remove it
+            }
+            var field = new Array();    //take input fields and process it with ajax
+            field[0] = $("#fname").val();
+            field[1] = $("#lname").val();
+            field[2] = $("#phone").val();
+            field[3] = $("#update").val();
+
+            $.ajax({
+                type: "POST",
+                url: "update",
+                data: "fname="+field[0]+"&lname="+field[1]+"&phone="+field[2]+"&update="+field[3],
+                success: function (serverReturn) {
+                    var p = document.createElement("p");    //create paragraph that wil hold message
+                    p.setAttribute("id", "message");    //set id
+                    if(serverReturn === 'good job'){    //if server did good job
+                        var text = document.createTextNode("Successful operation");
+                        p.setAttribute("class", "text-success");    //append successful message
+                        p.appendChild(text);
+                        x.appendChild(p);
+                    }else {
+                        var text = document.createTextNode("Failed operation");
+                        p.setAttribute("class", "text-danger"); //append warning message
+                        p.appendChild(text);
+                        x.appendChild(p);
+                    }
+                    $("#message").delay(1000);  //message fade's out
+                    $("#message").fadeOut(500);
+                }
+            });
+        });
+    }
 </script>
 {% endblock %}
 
@@ -49,40 +91,60 @@
                                         <div class="col-sm-3 col-md-2 col-5">
                                             <label style="font-weight:bold;">Email adress</label>
                                         </div>
-                                        <div class="col-md-8 col-6">
+                                        <div class="col-md-6 col-6">
                                             {{currentUser.email}} <hr>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-3 col-md-2 col-5">
-                                            <label style="font-weight:bold;">Full Name</label>
+                                            <label style="font-weight:bold;" for="fname">First name</label>
                                         </div>
-                                        <div class="col-md-8 col-6">
-                                            {{currentUser.firstname}} {{currentUser.lastname}}<hr>
+                                        <div class="col-md-6 col-6">
+                                            <input type="text" class="form-control input" id="fname" value="{{currentUser.firstname}}">
+                                            <br>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-3 col-md-2 col-5">
-                                            <label style="font-weight:bold;">Street</label>
-                                        </div>
-                                        <div class="col-md-8 col-6">
-                                            radit preko ajaxa<hr>
+                                        <div class="col-md-3 col-6">
+                                            <i class="pencil fas fa-pencil-alt"></i> <br>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-3 col-md-2 col-5">
-                                            <label style="font-weight:bold;">Mobile number</label>
+                                            <label style="font-weight:bold;" for="lname" class="label">Last name</label>
                                         </div>
-                                        <div class="col-md-8 col-6">
-                                             radit preko ajaxa<hr>
+                                        <div class="col-md-6 col-6">
+                                            <input type="text" class="form-control input" id="lname" value="{{currentUser.lastname}}">
+                                            <br>
+                                        </div>
+                                        <div class="col-md-3 col-6">
+                                            <i class="pencil fas fa-pencil-alt"></i> <br>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <label style="font-weight:bold;" for="phone" class="label">Mobile number</label>
+                                        </div>
+                                        <div class="col-md-6 col-6">
+                                            <input type="text" class="form-control input" id="phone" value="{{currentUser.phoneNumber}}">
+                                            <br>
+                                        </div>
+                                        <div class="col-md-3 col-6">
+                                            <i class="pencil fas fa-pencil-alt"></i> <br>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-bottom: 2rem;">
+                                        <div class="col-sm-3 col-md-2 col-5">
+                                            <button type="button" class="btn btn-outline-info" id="update" value="on" >Update</button>
+                                        </div>
+                                        <div class="col-md-8 col-6" id="messageDiv">
+
+                                        </div>
+                                    </div><hr>
                                     <div class="row">
                                         <div class="col-sm-3 col-md-2 col-5">
                                             <label style="font-weight:bold;">Album</label>
                                         </div>
                                         <div class="col-md-8 col-6">
-                                            <a href="/profile/album"><i class="fas fa-2x fa-images"></i></a><hr>
+                                            <a href="/profile/album"><i class="fas fa-2x fa-images"></i></a>
                                         </div>
                                     </div>
                                     <hr />

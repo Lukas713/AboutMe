@@ -58,7 +58,7 @@ class Login extends \Core\Controller
      */
     public function destroy(){
         Auth::logout(); //destroys session
-       $this->redirect('/login/getLogoutMessage');
+        $this->redirect('/login/getLogoutMessage');
     }
 
     /**

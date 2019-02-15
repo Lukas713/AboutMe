@@ -66,7 +66,6 @@ class Posts extends \Core\Model
                 $stmt->bindValue("branch", $this->branch, PDO::PARAM_STR);
                 $stmt->bindValue("link", $this->link, PDO::PARAM_STR);
                 $stmt->bindValue("description", $this->description, PDO::PARAM_STR);
-
                 return $stmt->execute();
             }
             return false;

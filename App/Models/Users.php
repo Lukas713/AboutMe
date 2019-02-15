@@ -238,4 +238,19 @@ class Users extends \Core\Model
         $stmt->bindValue('profile', $path, PDO::PARAM_STR);
         $stmt->execute();
     }
+
+    /**
+     * update profile with object properties
+     * @return void
+     */
+    public function update(){
+        $conn = static::connect();
+        $stmt = $conn->prepare("UPDATE user SET firstname = :firstname, lastname = :lastname,
+                                        phoneNumber = :phoneNumber WHERE id=:id");
+        $stmt->bindValue('firstname', $this->fname, PDO::PARAM_STR);
+        $stmt->bindValue('lastname', $this->lname, PDO::PARAM_STR);
+        $stmt->bindValue('phoneNumber', $this->phone, PDO::PARAM_STR);
+        $stmt->bindValue('id', $this->id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
 }
