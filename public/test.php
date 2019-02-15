@@ -1,4 +1,4 @@
 <?php
-	//this is phpinfo method
+	//this is phpinfo method.....
 	phpinfo();
 ?> 
