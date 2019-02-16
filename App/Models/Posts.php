@@ -9,6 +9,7 @@
 namespace App\Models;
 
 use mysql_xdevapi\Exception;
+use App\Config;
 use PDO;
 
 /**
@@ -35,14 +36,15 @@ class Posts extends \Core\Model
      * fetch all projects from database
      * @return array
      */
-    public static function getAll(){
+    public static function getAll($offset = 0){
         try {
             $conn = static::connect();
+            $stmt = $conn->prepare("SELECT * from project LIMIT :limit OFFSET :offset");
+            $stmt->bindValue("limit", Config::LIMIT_PAGES, PDO::PARAM_INT);
+            $stmt->bindValue("offset", $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $stmt = $conn->query("SELECT * from project");
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return $result;
         }catch(\PDOException $e){
             echo $e->getMessage();
         }
@@ -153,5 +155,12 @@ class Posts extends \Core\Model
         if(strlen($this->description) > 800){
             $this->errors[] = 'Description must have maximum 800 characters';
         }
+    }
+
+    public static function countPosts(){
+        $conn = static::connect();
+        $stmt = $conn->prepare("SELECT COUNT(*) as number FROM project");
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
 }

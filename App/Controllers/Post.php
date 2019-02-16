@@ -5,6 +5,7 @@ use App\Flash;
 use \Core\View;
 use App\Models\Posts;
 use \App\Auth;
+use \App\Paginator;
 
 /**
  * Post controller that talk with Post view and Post model
@@ -16,8 +17,22 @@ class Post extends \Core\Controller {
      * @return void
      */
     public function index(){
-        $result = Posts::getAll(); //invoke Models action
+        if(isset($this->routeParams['id'])){    
 
+            if($this->routeParams['id'] < 1){
+
+                $this->routeParams['id'] = 1;
+
+            }else if($this->routeParams['id'] > Paginator::getPageNumber()){
+                $this->routeParams['id'] = Paginator::getPageNumber();
+            }
+
+            $offset = Paginator::getOffset($this->routeParams['id']);
+        }else {
+            $offset = Paginator::getOffset();
+        }
+        $result = Posts::getAll($offset); //invoke Models action
+        $result['current'] = $this->routeParams['id'] ?? 1;
         View::render('Post/index.html', [
             'posts' => $result
         ]);
