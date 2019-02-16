@@ -3,7 +3,6 @@
 {% block title %} Post{% endblock %}
 
 {% block body %}
-
 <div class="container" style="margin-top: 1rem; margin-bottom: 1rem;">
     <div class="row justify-content-md-center">
         {% if currentUser.email == "lukas.scharmitzer@gmail.com" %}
@@ -14,22 +13,66 @@
     </div>
 </div>
 <div class="container" style="font-size: large;">
-    {% for post in posts %}
     <div class="row justify-content-md-center">
-        <div class="col col-md-8" style="text-align:center; margin-top: 1rem;">
-            <div class="card">
-                <h5 class="card-header"><b>Title:</b> {{post.title}}</h5>
-                <div class="card-body">
-                    <h5 class="card-title"><b>Branch of business:</b> {{post.branch}}</h5>
-                    <p class="card-text"><b>Description:</b> {{post.description}}</p><hr>
-                    <a href="{{post.link}}" class="btn btn-info">Code</a>
-                    {% if currentUser.email == "lukas.scharmitzer@gmail.com" %}
-                    <a href="/post/edit/{{post.id}}" class="btn btn-success">Change</a>
-                    {% endif %}
+        <div class="col col-md-6" style="text-align:center; margin-top: 1rem;">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-md-center">
+                    <li class="page-item">
+                        <a class="page-link" href="/post/index/{{posts.current - 1}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    {% for i in 1..pages %}
+                    <li class="page-item"><a class="page-link" href="/post/index/{{i}}">{{ i }}</a></li>
+                    {% endfor %}
+                    <li class="page-item">
+                        <a class="page-link" href="/post/index/{{posts.current + 1}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Link</th>
+            <th scope="col">Branch</th>
+            <th scope="col">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+            <tr>
+                    <td>{{ post.title }}</td>
+                    <td>
+                        <a href="{{post.link}}" class="btn btn-info"><i class="fas fa-link"></i></a>
+                    </td>
+                    <td>{{ post.branch }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModalLong">
+                        Description
+                        </button>
+                    </td>
+            </tr>
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        {{ post.description }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
