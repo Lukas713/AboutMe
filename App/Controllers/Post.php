@@ -17,7 +17,7 @@ class Post extends \Core\Controller {
      * @return void
      */
     public function index(){
-        if(isset($this->routeParams['id'])){    
+        if(isset($this->routeParams['id'])){
 
             if($this->routeParams['id'] < 1){
 
@@ -36,6 +36,7 @@ class Post extends \Core\Controller {
         View::render('Post/index.html', [
             'posts' => $result
         ]);
+
     }
 
     /**
@@ -70,6 +71,25 @@ class Post extends \Core\Controller {
             $this->redirect('/post/success');
         }
         $this->redirect('/post/add');
+    }
+
+    /**
+     * checks logged user
+     * invoke model method for deleting record
+     * @return void
+     */
+    public function delete() {
+        $this->requireLogin();
+
+        $user = Auth::getUser();
+        if($user->email != 'lukas.scharmitzer@gmail.com'){
+            Flash::addMessage("You dont have permission to do that", Flash::WARNING);
+            $this->redirect('/post/index');
+            return;
+        }
+        Posts::delete($this->routeParams['id']);
+        Flash::addMessage("Successful operation");
+        $this->redirect('/post/index');
     }
 
     /**

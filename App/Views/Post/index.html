@@ -24,7 +24,11 @@
                         </a>
                     </li>
                     {% for i in 1..pages %}
+                    {% if i == posts.current %}
+                    <li class="page-item active"><a class="page-link" href="/post/index/{{i}}">{{ i }}</a></li>
+                    {% else %}
                     <li class="page-item"><a class="page-link" href="/post/index/{{i}}">{{ i }}</a></li>
+                    {% endif %}
                     {% endfor %}
                     <li class="page-item">
                         <a class="page-link" href="/post/index/{{posts.current + 1}}" aria-label="Next">
@@ -43,22 +47,28 @@
             <th scope="col">Link</th>
             <th scope="col">Branch</th>
             <th scope="col">Description</th>
+            <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
         {% for post in posts %}
-            <tr>
-                    <td>{{ post.title }}</td>
-                    <td>
-                        <a href="{{post.link}}" class="btn btn-info"><i class="fas fa-link"></i></a>
-                    </td>
-                    <td>{{ post.branch }}</td>
-                    <td>
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModalLong">
-                        Description
-                        </button>
-                    </td>
-            </tr>
+        {% if post.title is not empty %}
+        <tr>
+            <td>{{ post.title }}</td>
+            <td>
+                <a href="{{post.link}}" class="btn btn-info"><i class="fas fa-link"></i></a>
+            </td>
+            <td>{{ post.branch }}</td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModalLong">
+                    Description
+                </button>
+            </td>
+            <td>
+                <a style="color:black" href="/post/edit/{{post.id}}"><i class="far fa-2x fa-edit"></i></a>
+                <a style="color:#e60000" href="/post/delete/{{post.id}}" onclick="return confirm('Are you sure?');"><i class="fas fa-2x fa-trash-alt"></i></a>
+            </td>
+        </tr>
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -71,6 +81,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
         </tbody>
     </table>

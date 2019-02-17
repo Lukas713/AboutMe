@@ -119,6 +119,18 @@ class Posts extends \Core\Model
     }
 
     /**
+     * connects to database and deletes record with id from parameter
+     * @param int
+     * @return void
+     */
+    public static function delete($id){
+        $conn = static::connect();
+        $stmt = $conn->prepare("DELETE FROM project where id = :id");
+        $stmt->bindValue("id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    /**
      * checks if project with title as argument exists
      * @return bool
      */
