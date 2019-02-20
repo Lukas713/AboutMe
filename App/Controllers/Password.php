@@ -10,6 +10,7 @@ namespace App\Controllers;
 
 use Core\View;
 use App\Models\Users;
+use App\Flash; 
 
 class Password extends \Core\Controller
 {
