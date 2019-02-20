@@ -1,4 +1,6 @@
-/* c:/xampp/mysql/bin/mysql.exe -ulukas -p123456789 --default_character_set=utf8 < C:\xampp\htdocs\AboutMe\public\script.sql*/
+/*
+c:/xampp/mysql/bin/mysql.exe -ulukas -p123456789 --default_character_set=utf8 < C:\xampp\htdocs\lukas713.com\public\script.sql
+*/
 
 drop database if exists aboutLukas;
 
@@ -22,7 +24,9 @@ create table user (
   email varchar(100) not null,
   password varchar(255) not null,
   profile varchar(255),
-  phoneNumber varchar(50)
+  phoneNumber varchar(50),
+  passwordResetHash varchar(64) unique,
+  passwordResetExpire datetime
 );
 
 create table remember (

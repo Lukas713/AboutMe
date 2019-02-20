@@ -8,9 +8,11 @@
 
 namespace App\Models;
 
+use Core\View;
 use mysql_xdevapi\Exception;
 use \App\Token;
-use \APP\Flash;
+use \App\Flash;
+use \App\Mail;
 use PDO;
 
 /**
@@ -118,7 +120,6 @@ class Users extends \Core\Model
         $stmt->bindValue("email", $email, PDO::PARAM_STR);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());  //fetch as constructed object from class that this method is called
-
         return $stmt->fetch();  //return object, if there is no such record
     }
     /**
@@ -252,5 +253,52 @@ class Users extends \Core\Model
         $stmt->bindValue('phoneNumber', $this->phone, PDO::PARAM_STR);
         $stmt->bindValue('id', $this->id, PDO::PARAM_INT);
         $stmt->execute();
+    }
+
+    /**
+     * creates token hash and expiry date
+     * inserts it inside database (user table)
+     * @return bool, true if execute operation did good job
+     */
+    protected function startPasswordReset(){
+        $token = new Token();
+        $hashedToken = $token->getHash();
+        $this->passwordResetToken = $token->getToken();
+        $expiryDate = time() + 60 * 60 * 2;
+
+        $conn = static::connect();
+        $stmt = $conn->prepare("UPDATE user SET passwordResetHash = :passwordResetHash,
+                                        passwordResetExpire = :passwordResetExpire
+                                        where id = :id");
+        $stmt->bindValue("passwordResetHash", $hashedToken, PDO::PARAM_STR);
+        $stmt->bindValue("passwordResetExpire", date('Y-m-d H:i:s', $expiryDate), PDO::PARAM_STR);
+        $stmt->bindValue("id", $this->id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    /**
+     * method that loads view for reset password and sends it to user
+     * @return void
+     **/
+    protected function sendPasswordResetEmail(){
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . 'password/index/' . $this->passwordResetToken;   //create url with token as id
+        $text = View::getRenderTemplate('Password/resetEmail.html', ['url' => $url]);   //load view
+        Mail::send($this->email, "Password reset", $text);  //send email to the user
+    }
+
+    /**
+     * checks if user with entered email exists
+     * invoke password reset method that inserts password hash token and expiry date inside database
+     * @param string, email from reset password form
+     * @return bool, true if user exists OR false otherwise
+     */
+    public static  function resetPassword($email) {
+        $user = self::findByEmail($email);
+        if(!$user){
+            return false;
+        }
+        if($user->startPasswordReset()){    //inserts hashed token and expiry date in database
+            $user->sendPasswordResetEmail();    //sends reset password button to the user
+        }
     }
 }

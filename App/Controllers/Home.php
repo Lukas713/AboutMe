@@ -3,8 +3,7 @@
 namespace App\Controllers;
 
 use \Core\View;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use \App\Mail;
 
 /**
  * Home controller that renders front page

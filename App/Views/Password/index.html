@@ -1,0 +1,38 @@
+{% extends 'base.html'%}
+
+{% block title %}Forgot password{% endblock %}
+
+{% block footer %}
+<script src="/js/hideShowPassword.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#formReset").validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                },
+            },
+            errorClass: "is-invalid"
+        });
+    });
+</script>
+
+{% endblock %}
+
+{% block body %}
+<div class="container" style="margin-top: 1rem; margin-bottom: 1rem;">
+    <div class="row justify-content-md-center">
+        <div class="col col-md-6">
+            <form method="post" action="/password/requestReset" id="formReset">
+                <h3>Request password reset</h3><hr>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email">
+                </div>
+                <input type="submit" class="btn btn-primary" value="Submit" name="submit">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -26,7 +26,6 @@ class Auth
     public static function login($user, $rememberMe){
         session_regenerate_id(true); //create new session and delete's new one
         $_SESSION['userID'] = $user->id . ' - ' . $user->email;
-
         if(!$rememberMe || !$user->rememberMe()){
             return;
         }

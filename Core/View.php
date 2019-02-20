@@ -21,6 +21,16 @@ class View
      * @return void
      */
     public static function render($template, $arguments = []){
+        echo self::getRenderTemplate($template, $arguments);
+    }
+
+    /**
+     * get the view template using Twig
+     * @param string template, The template file
+     * @param array, Assoc array of data to display in the view (optional)
+     * @return string
+     */
+    public static function getRenderTemplate($template, $arguments = []){
         static $twig = null;    //maintain its value between function calls
         if($twig === null){
             $loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/App/Views'); //loads template from the file system
@@ -30,6 +40,6 @@ class View
             $twig->addGlobal('pages', \App\Paginator::getPageNumber());
         }
         //loading template with some variables
-        echo $twig->render($template, $arguments);
+        return $twig->render($template, $arguments);
     }
 }
