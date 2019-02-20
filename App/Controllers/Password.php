@@ -31,7 +31,7 @@ class Password extends \Core\Controller
             $this->redirect('/');
         }
         Users::resetPassword($_POST['email']);
-        //Flash::addMessage("Successfully! Please check your email");
-        //$this->redirect("/");
+        Flash::addMessage("Successfully! Please check your email");
+        $this->redirect("/");
     }
 }
