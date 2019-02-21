@@ -281,7 +281,7 @@ class Users extends \Core\Model
      * @return void
      **/
     protected function sendPasswordResetEmail(){
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . 'password/index/' . $this->passwordResetToken;   //create url with token as id
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->passwordResetToken;   //create url with token as id
         $text = View::getRenderTemplate('Password/resetEmail.html', ['url' => $url]);   //load view
         Mail::send($this->email, "Password reset", $text);  //send email to the user
     }
@@ -300,5 +300,26 @@ class Users extends \Core\Model
         if($user->startPasswordReset()){    //inserts hashed token and expiry date in database
             $user->sendPasswordResetEmail();    //sends reset password button to the user
         }
+    }
+
+    /**
+     * finds user record with token value
+     * @param string, token value
+     * @return mixed, object if record is found, false otherwise
+     */
+    public static function findByPasswordToken($token){
+        $token = new Token($token);
+        $hashedToken = $token->getHash();
+
+        $conn = static::connect();
+        $stmt = $conn->prepare("SELECT * FROM user where passwordResetHash = :passwordResetHash");
+        $stmt->bindValue("passwordResetHash", $hashedToken, PDO::PARAM_STR);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $user = $stmt->fetch();
+        if(!$user || strtotime($user->passwordResetExpire) < time()){
+            return false;
+        }
+        return $user;
     }
 }

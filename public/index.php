@@ -23,6 +23,7 @@ $router->add('{controller}/{action}/{id:\d+}');
 $router->add('signup', ['controller' => 'signup', 'action' => 'index']);
 $router->add('login', ['controller' => 'login', 'action' => 'index']);
 $router->add('logout', ['controller' => 'login', 'action' => 'destroy']);
+$router->add('password/reset/{token:[\da-f]+}', ['controller' => 'password', 'action' => 'reset']);
 
 /* catching the entered URL */
 $url = $_SERVER['QUERY_STRING'];
