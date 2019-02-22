@@ -41,13 +41,13 @@ class Users extends \Core\Model
      */
     public function save(){
         $this->validate();
-        if(!empty($this->errors)){
+        if(!empty($this->errors) || $this->emailExists($this->email)){
             return false;
         }
         $conn = static::connect();
-        $stmt = $conn->prepare("INSERT into user (id, firstname, lastname, email, password) VALUES (null, :firstname, :lastname, :email, :password)");
-        $stmt->bindValue("firstname", $this->fname, PDO::PARAM_STR);
-        $stmt->bindValue("lastname", $this->lname, PDO::PARAM_STR);
+        $stmt = $conn->prepare("INSERT into user (id, firstName, lastName, email, password) VALUES (null, :firstname, :lastname, :email, :password)");
+        $stmt->bindValue("firstname", $this->firstName, PDO::PARAM_STR);
+        $stmt->bindValue("lastname", $this->lastName, PDO::PARAM_STR);
         $stmt->bindValue("email", $this->email, PDO::PARAM_STR);
         $stmt->bindValue("password", $this->password, PDO::PARAM_STR);
         if(!$stmt->execute()){
@@ -63,22 +63,17 @@ class Users extends \Core\Model
      */
     protected function validate(){
         //validate firstname
-        if(filter_var($this->fname, FILTER_SANITIZE_STRING) === false){
+        if(filter_var($this->firstName, FILTER_SANITIZE_STRING) === false){
             $this->errors[] = 'Invalid first name';
         }
 
-        if(filter_var($this->lname, FILTER_SANITIZE_STRING) === false){
+        if(filter_var($this->lastName, FILTER_SANITIZE_STRING) === false){
             $this->errors[] = 'Invalid last name';
         }
 
         //validate email
         if(filter_var($this->email, FILTER_VALIDATE_EMAIL) === false){
             $this->errors[] = 'Invalid email';
-        }
-
-        //validate if email is already taken
-        if($this->emailExists($this->email)){
-            $this->errors[] = 'Email is already in use';
         }
 
         //validate password lenght
@@ -248,8 +243,8 @@ class Users extends \Core\Model
         $conn = static::connect();
         $stmt = $conn->prepare("UPDATE user SET firstname = :firstname, lastname = :lastname,
                                         phoneNumber = :phoneNumber WHERE id=:id");
-        $stmt->bindValue('firstname', $this->fname, PDO::PARAM_STR);
-        $stmt->bindValue('lastname', $this->lname, PDO::PARAM_STR);
+        $stmt->bindValue('firstname', $this->firstName, PDO::PARAM_STR);
+        $stmt->bindValue('lastname', $this->lastName, PDO::PARAM_STR);
         $stmt->bindValue('phoneNumber', $this->phone, PDO::PARAM_STR);
         $stmt->bindValue('id', $this->id, PDO::PARAM_INT);
         $stmt->execute();
@@ -260,7 +255,7 @@ class Users extends \Core\Model
      * inserts it inside database (user table)
      * @return bool, true if execute operation did good job
      */
-    protected function startPasswordReset(){
+    protected function insertHashAndExpiryDate(){
         $token = new Token();
         $hashedToken = $token->getHash();
         $this->passwordResetToken = $token->getToken();
@@ -282,8 +277,9 @@ class Users extends \Core\Model
      **/
     protected function sendPasswordResetEmail(){
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->passwordResetToken;   //create url with token as id
-        $text = View::getRenderTemplate('Password/resetEmail.html', ['url' => $url]);   //load view
-        Mail::send($this->email, "Password reset", $text);  //send email to the user
+        $text = 'Please click on the following to reset the password: ' . $url;
+        $html = View::getRenderTemplate('Password/resetEmail.html', ['url' => $url]);
+        Mail::send($this->email, "Password reset", $html, $text);  //send email to the user
     }
 
     /**
@@ -292,13 +288,17 @@ class Users extends \Core\Model
      * @param string, email from reset password form
      * @return bool, true if user exists OR false otherwise
      */
-    public static  function resetPassword($email) {
+    public static  function startResetPassword($email) {
+        if(filter_var($email, FILTER_VALIDATE_EMAIL) === false){
+            return false;
+        }
         $user = self::findByEmail($email);
         if(!$user){
             return false;
         }
-        if($user->startPasswordReset()){    //inserts hashed token and expiry date in database
-            $user->sendPasswordResetEmail();    //sends reset password button to the user
+        if($user->insertHashAndExpiryDate()){    //inserts hashed token and expiry date in database
+            $user->sendPasswordResetEmail();    //sends reset password button to the user's email
+            return true;
         }
     }
 
@@ -321,5 +321,26 @@ class Users extends \Core\Model
             return false;
         }
         return $user;
+    }
+
+    /**
+     * creates password hash and validates properties from User object
+     * updates clients password record with hashed value
+     * @param string, password string from post
+     * @return bool, false if password format is not valid and true otherwise
+     */
+    public function resetPassword($newPassword){
+        $this->password = password_hash($newPassword, PASSWORD_DEFAULT);
+        $this->validate();
+        if(!empty($this->errors)){
+            return false;
+        }
+        $conn = static::connect();
+        $stmt = $conn->prepare("UPDATE user SET password = :password, 
+                                        passwordResetHash = NULL, passwordResetExpire = NULL
+                                        WHERE id = :id");
+        $stmt->bindValue("password", $this->password, PDO::PARAM_STR);
+        $stmt->bindValue("id", $this->id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }

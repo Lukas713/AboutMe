@@ -30,15 +30,15 @@
                 x.removeChild(t);    //remove it
             }
             var field = new Array();    //take input fields and process it with ajax
-            field[0] = $("#fname").val();
-            field[1] = $("#lname").val();
+            field[0] = $("#firstName").val();
+            field[1] = $("#lastName").val();
             field[2] = $("#phone").val();
             field[3] = $("#update").val();
 
             $.ajax({
                 type: "POST",
                 url: "update",
-                data: "fname="+field[0]+"&lname="+field[1]+"&phone="+field[2]+"&update="+field[3],
+                data: "firstName="+field[0]+"&lastName="+field[1]+"&phone="+field[2]+"&update="+field[3],
                 success: function (serverReturn) {
                     var p = document.createElement("p");    //create paragraph that wil hold message
                     p.setAttribute("id", "message");    //set id
@@ -97,19 +97,19 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-3 col-md-2 col-5">
-                                            <label style="font-weight:bold;" for="fname">First name</label>
+                                            <label style="font-weight:bold;" for="firstName">First name</label>
                                         </div>
                                         <div class="col-md-6 col-6">
-                                            <input type="text" class="form-control input" id="fname" value="{{currentUser.firstname}}">
+                                            <input type="text" class="form-control input" id="firstName" value="{{currentUser.firstName}}">
                                             <br>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-3 col-md-2 col-5">
-                                            <label style="font-weight:bold;" for="lname" class="label">Last name</label>
+                                            <label style="font-weight:bold;" for="lastName" class="label">Last name</label>
                                         </div>
                                         <div class="col-md-6 col-6">
-                                            <input type="text" class="form-control input" id="lname" value="{{currentUser.lastname}}">
+                                            <input type="text" class="form-control input" id="lastName" value="{{currentUser.lastName}}">
                                             <br>
                                         </div>
                                     </div>

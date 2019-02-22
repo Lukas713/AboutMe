@@ -33,7 +33,6 @@ class Signup extends \Core\Controller
         if(isset($_POST['submit'])){
             $_POST['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
             $user_m = new Users($_POST);    //init object from User model
-
             if(!$user_m->save()){
                 View::render('Signup/index.html', [
                     "user" => $user_m   //render view with errors as PUBLIC properties

@@ -14,13 +14,16 @@ require '../vendor/autoload.php';
  * class that sends email with SendGrid API
  **/
 class Mail {
-    public static function send($to, $subject, $text){
+    public static function send($to, $subject, $html, $text){
         $email = new \SendGrid\Mail\Mail();
         $email->setFrom("lukas.scharmitzer@gmail.com");
         $email->setSubject($subject);
         $email->addTo($to);
         $email->addContent(
-            "text/html", $text
+            "text/plain", $text
+        );
+        $email->addContent(
+            "text/html", $html
         );
         $sendgrid = new \SendGrid(Config::SENDGRID_API_KEY);
         try {
