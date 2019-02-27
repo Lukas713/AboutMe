@@ -17,7 +17,7 @@ abstract class Model
     {
 
     }
-    
+
     protected static function connect() {
 
         static $conn = null;
