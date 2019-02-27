@@ -2,9 +2,25 @@
 
 {% block title %}Profile{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="../../../js/intl-tel-input-15.0.0/build/css/intlTelInput.min.css">
+    <style>
+        .iti-flag {
+            background-image: url("../../../js/intl-tel-input-15.0.0/build/img/flags.png");
+        }
+    </style>
+{% endblock %}
+
 {% block footer %}
+<script src="../../../js/intl-tel-input-15.0.0/build/js/intlTelInput.min.js"></script>
+
 <script>
+    var input = document.querySelector("#phone");
+    var iti = window.intlTelInput(input);
+    window.intlTelInputGlobals.loadUtils("../../../js/intl-tel-input-15.0.0/build/js/utils.js");
     $(document).ready(function(){
+
+        //start with validating image input
         $("#formImg").validate({
             rules: {
                 title: {
@@ -16,13 +32,14 @@
             },
             errorClass: "is-invalid"
         });
-        updateBasicInfo();
+        //start with updating info function
+        updateBasicInfo(iti);
     });
 
     /**
      * function that sens inputs on server, updates profile and display status message
      */
-    function updateBasicInfo(){
+    function updateBasicInfo(object){
         $("#update").click(function(){  //when user clicks update button
             var x = document.getElementById("messageDiv");  //get div where message resides
             if(x.children.length > 0){  //if there is element
@@ -32,9 +49,9 @@
             var field = new Array();    //take input fields and process it with ajax
             field[0] = $("#firstName").val();
             field[1] = $("#lastName").val();
-            field[2] = $("#phone").val();
+            field[2] = iti.getNumber(intlTelInputUtils.numberFormat.E164);
             field[3] = $("#update").val();
-
+            console.log(field[2]);
             $.ajax({
                 type: "POST",
                 url: "update",
@@ -118,7 +135,8 @@
                                             <label style="font-weight:bold;" for="phone" class="label">Mobile number</label>
                                         </div>
                                         <div class="col-md-6 col-6">
-                                            <input type="text" class="form-control input" id="phone" value="{{currentUser.phoneNumber}}">
+                                            <!--<input type="text" class="form-control input" id="phone" value="{{currentUser.phoneNumber}}">-->
+                                            <input type="tel" class="form-control input" id="phone" value="{{currentUser.phoneNumber}}">
                                             <br>
                                         </div>
                                     </div>

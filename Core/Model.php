@@ -13,6 +13,11 @@ use PDO;
 
 abstract class Model
 {
+    private function __construct()
+    {
+
+    }
+    
     protected static function connect() {
 
         static $conn = null;

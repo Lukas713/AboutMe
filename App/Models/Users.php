@@ -241,6 +241,7 @@ class Users extends \Core\Model
      */
     public function update(){
         $conn = static::connect();
+        $this->phone = "+" . $this->phone; //bad solution, but POST saves whole numbers without " + " sign!!!!!!
         $stmt = $conn->prepare("UPDATE user SET firstname = :firstname, lastname = :lastname,
                                         phoneNumber = :phoneNumber WHERE id=:id");
         $stmt->bindValue('firstname', $this->firstName, PDO::PARAM_STR);
