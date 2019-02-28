@@ -18,6 +18,7 @@
     var input = document.querySelector("#phone");
     var iti = window.intlTelInput(input);
     window.intlTelInputGlobals.loadUtils("../../../js/intl-tel-input-15.0.0/build/js/utils.js");
+
     $(document).ready(function(){
 
         //start with validating image input
@@ -33,13 +34,13 @@
             errorClass: "is-invalid"
         });
         //start with updating info function
-        updateBasicInfo(iti);
+        updateBasicInfo();
     });
 
     /**
      * function that sens inputs on server, updates profile and display status message
      */
-    function updateBasicInfo(object){
+    function updateBasicInfo(){
         $("#update").click(function(){  //when user clicks update button
             var x = document.getElementById("messageDiv");  //get div where message resides
             if(x.children.length > 0){  //if there is element
@@ -49,10 +50,13 @@
             var field = new Array();    //take input fields and process it with ajax
             field[0] = $("#firstName").val();
             field[1] = $("#lastName").val();
+            //variable that holds plugin instance
             field[2] = iti.getNumber(intlTelInputUtils.numberFormat.E164);
             field[3] = $("#update").val();
-            console.log(field[2]);
-            $.ajax({
+
+            field[4] = new $('#inputFile').prop('files')[0];
+            console.log(field[4]);
+           /* $.ajax({
                 type: "POST",
                 url: "update",
                 data: "firstName="+field[0]+"&lastName="+field[1]+"&phone="+field[2]+"&update="+field[3],
@@ -73,7 +77,7 @@
                     $("#message").delay(1000);  //message fade's out
                     $("#message").fadeOut(500);
                 }
-            });
+            });*/
         });
     }
 </script>
@@ -87,8 +91,12 @@
                 <div class="card-body">
                     <div class="card-title mb-4">
                         <div class="d-flex justify-content-start">
-                            <div class="image-container">
-                                <img src="../../../img/{{currentUser.profile}}"  title="profile" alt="profile" style="width: 150px; height: 150px" class="img-thumbnail">
+                            <div class="image-container" id="profileContainer">
+                                <img src="../../../img/{{currentUser.profile}}"  id="profile" title="profile" alt="profile" style="width: 150px; height: 150px; margin: 1rem;" class="img-thumbnail">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="inputFile">
+                                    <label class="custom-file-label" for="inputFile">Change profile</label>
+                                </div>
                             </div>
                         </div>
                     </div>
