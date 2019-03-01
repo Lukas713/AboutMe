@@ -47,23 +47,17 @@
                 var t = document.getElementById("message");
                 x.removeChild(t);    //remove it
             }
-            var field = new Array();    //take input fields and process it with ajax
-            field[0] = $("#firstName").val();
-            field[1] = $("#lastName").val();
-            //variable that holds plugin instance
-            field[2] = iti.getNumber(intlTelInputUtils.numberFormat.E164);
-            field[3] = $("#update").val();
-            var fileData = $('#inputFile').prop('files')[0];
             var formData = new FormData();
-            formData.append("firstName", field[0]);
-            formData.append("lastName", field[1]);
-            formData.append("phone", field[2]);
-            formData.append("update", field[3]);
-            formData.append("file", fileData);
-           $.ajax({
+            formData.append("firstName", $("#firstName").val());
+            formData.append("lastName", $("#lastName").val());
+            formData.append("phone", iti.getNumber(intlTelInputUtils.numberFormat.E164));
+            formData.append("update", $("#update").val());
+            formData.append("profileTitle", $('#profileTitle').val());
+            formData.append("file", $('#inputFile').prop('files')[0]);
+
+            $.ajax({
                type: "post",
                url: "update",
-               //data: "firstName="+field[0]+"&lastName="+field[1]+"&phone="+field[2]+"&update="+field[3],
                data: formData,
                cache: false,
                contentType: false,
@@ -80,6 +74,7 @@
                        var text = document.createTextNode("Failed operation");
                        p.setAttribute("class", "text-danger"); //append warning message
                        p.appendChild(text);
+                       console.log(serverReturn);
                        x.appendChild(p);
                    }
                    $("#message").delay(1000);  //message fade's out
@@ -101,10 +96,13 @@
                         <div class="d-flex justify-content-start">
                             <div class="image-container" id="profileContainer">
                                 <img src="../../../img/{{currentUser.profile}}"  id="profile" title="profile" alt="profile" style="width: 150px; height: 150px; margin: 1rem;" class="img-thumbnail">
-                                <div class="custom-file">
+
+                                <div class="custom-file" style="margin-bottom: 1rem; ">
                                     <input type="file" class="custom-file-input" id="inputFile">
                                     <label class="custom-file-label" for="inputFile">Change profile</label>
                                 </div>
+                                <input type="text" class="form-control input" id="profileTitle" placeholder="Enter profile image title">
+                                <hr>
                             </div>
                         </div>
                     </div>

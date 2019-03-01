@@ -148,8 +148,11 @@ class Profile extends Authenticated
             if(isset($_FILES['file'])){
                 $_POST['image'] = $_FILES['file'];
                 $image_m = new Images($_POST['image']);
-                $image = $image_m->insert("profile");
-                $this->compress($_FILES['file']['tmp_name'], $image['path']);
+                $image = $image_m->insert($_POST['profileTitle']);
+                if(!$image || !$this->compress($_POST['image']['tmp_name'], $image['path'])){
+                    echo 'profileTitle';
+                    return;
+                }
                 $imagePath = explode("img/", $image['path']);
                 $user_m->setProfileInDatabase($imagePath[1]);
             }
