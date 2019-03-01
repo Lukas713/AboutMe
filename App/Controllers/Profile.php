@@ -135,7 +135,8 @@ class Profile extends Authenticated
     }
 
     /**
-     * gets user's ide from session, creates model object and invoke update method
+     * gets user's ide from session,
+     * creates model object and invoke update method
      * @return void
      */
     public function update(){
@@ -143,12 +144,12 @@ class Profile extends Authenticated
            $userID = explode(" - ", $_SESSION['userID']);
            $_POST['id'] = $userID[0];
            $user_m = new Users($_POST);
+
             if(isset($_FILES['file'])){
                 $_POST['image'] = $_FILES['file'];
                 $image_m = new Images($_POST['image']);
                 $image = $image_m->insert("profile");
-                $image['oldPath'] = $_POST['image']['tmp_name'];
-                $image_m->moveFromTemp($image);
+                $this->compress($_FILES['file']['tmp_name'], $image['path']);
                 $imagePath = explode("img/", $image['path']);
                 $user_m->setProfileInDatabase($imagePath[1]);
             }

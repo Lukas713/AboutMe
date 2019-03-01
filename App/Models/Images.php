@@ -45,7 +45,11 @@ class Images extends \Core\Model
         return self::convertPath($result);
     }
 
-
+    /**
+     * validate title input
+     * adds random chars to title to differentiate from other titles
+     * and returns it
+     */
     protected function insertPreworkout($title){
         $this->validateTitle($title);
 
@@ -87,7 +91,6 @@ class Images extends \Core\Model
             $stmt->bindValue('title', $userFile[2], PDO::PARAM_STR);
             $stmt->bindValue('user', $userFile[0], PDO::PARAM_INT);
             $stmt->execute();
-
             $lastId = $conn->lastInsertId();
             return $this->getImageWithId($lastId);
         }catch (\PDOException $e){
@@ -178,14 +181,5 @@ class Images extends \Core\Model
             return false;
         }
         return true;
-    }
-
-    /**
-     * move from temp file
-     *
-     */
-    public function moveFromTemp($image){
-        $userID = explode(" - ", $_SESSION['userID']);
-        move_uploaded_file($image['oldPath'], $image['path']);
     }
 }
