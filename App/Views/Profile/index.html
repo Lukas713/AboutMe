@@ -53,31 +53,39 @@
             //variable that holds plugin instance
             field[2] = iti.getNumber(intlTelInputUtils.numberFormat.E164);
             field[3] = $("#update").val();
-
-            field[4] = new $('#inputFile').prop('files')[0];
-            console.log(field[4]);
-           /* $.ajax({
-                type: "POST",
-                url: "update",
-                data: "firstName="+field[0]+"&lastName="+field[1]+"&phone="+field[2]+"&update="+field[3],
-                success: function (serverReturn) {
-                    var p = document.createElement("p");    //create paragraph that wil hold message
-                    p.setAttribute("id", "message");    //set id
-                    if(serverReturn === 'good job'){    //if server did good job
-                        var text = document.createTextNode("Successful operation");
-                        p.setAttribute("class", "text-success");    //append successful message
-                        p.appendChild(text);
-                        x.appendChild(p);
-                    }else {
-                        var text = document.createTextNode("Failed operation");
-                        p.setAttribute("class", "text-danger"); //append warning message
-                        p.appendChild(text);
-                        x.appendChild(p);
-                    }
-                    $("#message").delay(1000);  //message fade's out
-                    $("#message").fadeOut(500);
+            var fileData = $('#inputFile').prop('files')[0];
+            var formData = new FormData();
+            formData.append("firstName", field[0]);
+            formData.append("lastName", field[1]);
+            formData.append("phone", field[2]);
+            formData.append("update", field[3]);
+            formData.append("file", fileData);
+           $.ajax({
+               type: "post",
+               url: "update",
+               //data: "firstName="+field[0]+"&lastName="+field[1]+"&phone="+field[2]+"&update="+field[3],
+               data: formData,
+               cache: false,
+               contentType: false,
+               processData: false,
+               success: function (serverReturn) {
+                   var p = document.createElement("p");    //create paragraph that wil hold message
+                   p.setAttribute("id", "message");    //set id
+                   if(serverReturn === 'good job'){    //if server did good job
+                       var text = document.createTextNode("Successful operation");
+                       p.setAttribute("class", "text-success");    //append successful message
+                       p.appendChild(text);
+                       x.appendChild(p);
+                   }else {
+                       var text = document.createTextNode("Failed operation");
+                       p.setAttribute("class", "text-danger"); //append warning message
+                       p.appendChild(text);
+                       x.appendChild(p);
+                   }
+                   $("#message").delay(1000);  //message fade's out
+                   $("#message").fadeOut(500);
                 }
-            });*/
+            });
         });
     }
 </script>
@@ -153,7 +161,6 @@
                                             <button type="button" class="btn btn-outline-info" id="update" value="on" >Update</button>
                                         </div>
                                         <div class="col-md-8 col-6" id="messageDiv">
-
                                         </div>
                                     </div><hr>
                                     <div class="row">

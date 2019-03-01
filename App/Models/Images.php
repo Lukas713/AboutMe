@@ -20,7 +20,7 @@ class Images extends \Core\Model
      * @param assoc array
      * @return void
      */
-    public function __construct($file)
+    public function __construct($file = [])
     {
         foreach($file as $key => $value){
             $this->$key = $value;
@@ -45,24 +45,22 @@ class Images extends \Core\Model
         return self::convertPath($result);
     }
 
+
     protected function insertPreworkout($title){
         $this->validateTitle($title);
 
         if(!empty($this->errors)){
             return false;
         }
-
         //set random string in image's title
         $title .= '&' . bin2hex(random_bytes(5));
 
         $userFile = explode('-', $_SESSION['userID']);
-
         if(!self::isItJpg($this->tmp_name)){
             $file = BP . 'img/' . trim($userFile[1]) . "/" . $title . ".png";  //take file path
         }else {
             $file = BP . 'img/' . trim($userFile[1]) . "/" . $title . ".jpg";  //take file path
         }
-
         if(!file_exists(BP . 'img/' . trim($userFile[1]))){
             mkdir(BP . 'img/' . trim($userFile[1]));
         }
@@ -180,5 +178,14 @@ class Images extends \Core\Model
             return false;
         }
         return true;
+    }
+
+    /**
+     * move from temp file
+     *
+     */
+    public function moveFromTemp($image){
+        $userID = explode(" - ", $_SESSION['userID']);
+        move_uploaded_file($image['oldPath'], $image['path']);
     }
 }

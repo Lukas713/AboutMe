@@ -23,6 +23,14 @@
             <div class="col-8">
                 <input type="tel" id="phone">
             </div>
+        </div><hr>
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputFile">
+                    <label class="custom-file-label" for="inputFile">Change profile</label>
+                </div>
+            </div>
         </div>
 	</div>
     <script src="js/intl-tel-input-15.0.0/build/js/intlTelInput.min.js"></script>
@@ -34,6 +42,25 @@
     <script>
         var input = document.querySelector("#phone");
         window.intlTelInput(input);
+
+        $(document).ready(function() {
+            $('#inputFile').change(function(){
+                var file_data = $('#inputFile').prop('files')[0];
+                var form_data = new FormData();
+                form_data.append('file', file_data);
+                $.ajax({
+                    url: "tester.php",
+                    type: "post",
+                    data: form_data,
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    success: function(data){
+                        console.log(data);
+                    }
+                });
+            });
+        });
     </script>
 	</body>
 </html>

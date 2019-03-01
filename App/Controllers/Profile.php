@@ -139,10 +139,19 @@ class Profile extends Authenticated
      * @return void
      */
     public function update(){
-        if(isset($_POST['update'])){
-            $userID = explode(" -", $_SESSION['userID']);
-            $_POST['id'] = $userID[0];
-            $user_m = new Users($_POST);
+       if(isset($_POST['update'])){
+           $userID = explode(" - ", $_SESSION['userID']);
+           $_POST['id'] = $userID[0];
+           $user_m = new Users($_POST);
+            if(isset($_FILES['file'])){
+                $_POST['image'] = $_FILES['file'];
+                $image_m = new Images($_POST['image']);
+                $image = $image_m->insert("profile");
+                $image['oldPath'] = $_POST['image']['tmp_name'];
+                $image_m->moveFromTemp($image);
+                $imagePath = explode("img/", $image['path']);
+                $user_m->setProfileInDatabase($imagePath[1]);
+            }
             $user_m->update();
             echo 'good job';
         }

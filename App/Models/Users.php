@@ -226,7 +226,7 @@ class Users extends \Core\Model
      * @param string, email with extension (.png or .jpg)
      * @return void
      */
-    protected function setProfileInDatabase($path){
+    public function setProfileInDatabase($path){
         $conn = static::connect();
         $stmt = $conn->prepare('UPDATE user SET profile = :profile 
                                         WHERE id = :id ');
@@ -240,6 +240,9 @@ class Users extends \Core\Model
      * @return void
      */
     public function update(){
+        if(isset($this->file) && $this->file !== "undefined"){
+
+        }
         $conn = static::connect();
         $this->phone = "+" . $this->phone; //bad solution, but POST saves whole numbers without " + " sign!!!!!!
         $stmt = $conn->prepare("UPDATE user SET firstname = :firstname, lastname = :lastname,
