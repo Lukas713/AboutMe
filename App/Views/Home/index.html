@@ -2,6 +2,9 @@
 
 {% block title %} Home{% endblock %}
 
+{% block footer %}
+
+{% endblock %}
 {% block body %}
 {% if currentUser %}
  <a style="float:right; margin-right:2rem;"href="/profile/index">{{currentUser.email}}</a>

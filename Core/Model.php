@@ -13,6 +13,8 @@ use PDO;
 
 abstract class Model
 {
+    protected $limitPages;
+
     private function __construct()
     {
 
@@ -30,5 +32,21 @@ abstract class Model
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         return $conn;
+    }
+
+    /**
+     * return number of records in database
+     * @return object or false
+     */
+    public function countPosts() {
+
+    }
+
+    /**
+     * return number of pages
+     * @return int
+     */
+    public function returnLimitPages() {
+        return $this->limitPages;
     }
 }

@@ -3,21 +3,21 @@
 {% block title %}Profile{% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" href="../../../js/intl-tel-input-15.0.0/build/css/intlTelInput.min.css">
+    <link rel="stylesheet" href="../../../js/node_modules/intl-tel-input/build/css/intlTelInput.min.css">
     <style>
         .iti-flag {
-            background-image: url("../../../js/intl-tel-input-15.0.0/build/img/flags.png");
+            background-image: url("../../../js/node_modules/intl-tel-input/build/img/flags.png");
         }
     </style>
 {% endblock %}
 
 {% block footer %}
-<script src="../../../js/intl-tel-input-15.0.0/build/js/intlTelInput.min.js"></script>
+<script src="../../../js/node_modules/intl-tel-input/build/js/intlTelInput.min.js"></script>
 
 <script>
     var input = document.querySelector("#phone");
     var iti = window.intlTelInput(input);
-    window.intlTelInputGlobals.loadUtils("../../../js/intl-tel-input-15.0.0/build/js/utils.js");
+    window.intlTelInputGlobals.loadUtils("../../../js/node_modules/intl-tel-input/build/js/utils.js");
 
     $(document).ready(function(){
 

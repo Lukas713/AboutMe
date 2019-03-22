@@ -25,8 +25,10 @@ class Posts extends \Core\Model
     /**
      * init properties with input values from $_POST
      */
-    public function __construct($params)
+    public function __construct($params = [])
     {
+        $this->limitPages = Config::LIMIT_PAGES;
+
         foreach($params as $key => $value){
             $this->$key = $value;
         }
@@ -169,7 +171,7 @@ class Posts extends \Core\Model
         }
     }
 
-    public static function countPosts(){
+    public function countPosts(){
         $conn = static::connect();
         $stmt = $conn->prepare("SELECT COUNT(*) as number FROM project");
         $stmt->execute();

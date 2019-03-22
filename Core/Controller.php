@@ -9,12 +9,18 @@ namespace Core;
 
 use \App\Auth;
 use \App\Flash;
+use \App\Paginator;
 
 /*
  * Base controller
  * */
 abstract class Controller
 {
+    /**
+     * @paginator interface
+     */
+    protected $paginator;
+
     /**
      * parameters from matched route
      */
@@ -26,8 +32,9 @@ abstract class Controller
      * @param array $routeParams, Parameters from the root
      * @return void
      */
-    public function __construct($routeParams)
+    public function __construct($routeParams, Paginator $paginator = null)
     {
+        $this->paginator = $paginator;
         $this->routeParams = $routeParams;
     }
 
@@ -76,6 +83,22 @@ abstract class Controller
             Auth::rememberRequestedURI();
             $this->redirect('/login');
         }
+    }
+
+    /**
+     *  checks if paginator is null
+     *  returns object
+     */
+    protected function chechAndSetPagintor(){
+
+    }
+
+    /**
+     * check id from route
+     * and return offset that is used for current page in paginator
+     */
+    protected function checkRouteId(){
+
     }
 
     protected function after(){

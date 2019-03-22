@@ -9,16 +9,25 @@
 namespace App;
 
 use App\Models\Posts;
+use Core\Model;
+use App;
 
 class Paginator
 {
+    private $model;
+
+    public function __construct(Model $model)
+    {
+        $this->model = $model;
+    }
+
     /**
      * get maximum number of pages
      * @return int
      */
-    public static function getPageNumber(){
-        $pageNumber = Posts::countPosts();
-        return ceil($pageNumber->number / Config::LIMIT_PAGES);
+    public function getPageNumber(){
+        $pageNumber = $this->model->countPosts();
+        return ceil($pageNumber->number / $this->model->returnLimitPages());
     }
 
     /**
@@ -26,8 +35,12 @@ class Paginator
      * @param int
      * @return int
      */
-    public static function getOffset($page = 1){
-        $offset = ($page * Config::LIMIT_PAGES) - Config::LIMIT_PAGES;
+    public function getOffset($page = 1){
+        $offset = ($page * $this->model->returnLimitPages()) - $this->model->returnLimitPages();
         return $offset;
+    }
+
+    public function getModelClassName(){
+        return get_class($this->model);
     }
 }

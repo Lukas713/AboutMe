@@ -37,7 +37,6 @@ class View
             $twig = new \Twig_Environment($loader); //call template with default configuration
             $twig->addGlobal('currentUser', \App\Auth::getUser());
             $twig->addGlobal('messages', \App\Flash::getMessage());
-            $twig->addGlobal('pages', \App\Paginator::getPageNumber());
         }
         //loading template with some variables
         return $twig->render($template, $arguments);

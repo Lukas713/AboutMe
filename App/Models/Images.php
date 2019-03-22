@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use \App\Config;
 use PDO;
 
 class Images extends \Core\Model
@@ -22,6 +23,8 @@ class Images extends \Core\Model
      */
     public function __construct($file = [])
     {
+        $this->limitPages = Config::LIMIT_IMAGES;
+
         foreach($file as $key => $value){
             $this->$key = $value;
         }
@@ -32,15 +35,18 @@ class Images extends \Core\Model
      *
      * @return array, associative array with records
      */
-    public static function getAll(){
-        $userID = explode('-', $_SESSION['userID']);
+    public static function getAll($offset = 0){
         $conn = static::connect();
-        $stmt = $conn->prepare("SELECT id, path, SUBSTRING_INDEX(title, '&', 1) as title, user 
-                                        from images WHERE user = :user
-                                        ORDER BY id DESC");
-        $stmt->bindValue("user", $userID[0], PDO::PARAM_INT);
+        $stmt = $conn->prepare("SELECT a.id, a.path, SUBSTRING_INDEX(a.title, '&', 1) as title, a.user, b.email as email 
+                                        from images a
+                                        inner join user b
+                                        on a.user = b.id
+                                        ORDER BY id DESC
+                                        LIMIT :limit
+                                        OFFSET :offset");
+        $stmt->bindValue("limit", Config::LIMIT_IMAGES, PDO::PARAM_INT);
+        $stmt->bindValue("offset", $offset, PDO::PARAM_INT);
         $stmt->execute();
-
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return self::convertPath($result);
     }
@@ -181,5 +187,12 @@ class Images extends \Core\Model
             return false;
         }
         return true;
+    }
+
+    public function countPosts(){
+        $conn = static::connect();
+        $stmt = $conn->prepare("SELECT COUNT(*) as number FROM images");
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
 }

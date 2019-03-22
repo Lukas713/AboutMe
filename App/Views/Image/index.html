@@ -1,5 +1,36 @@
 {% extends 'base.html'%}
 
+{% block head %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+<style>
+    body {
+        background-color:#1d1d1d !important;;
+    }
+
+    .thumb{
+        margin-bottom: 30px;
+    }
+
+    .page-top{
+        margin-top:85px;
+    }
+
+
+    img.zoom {
+        width: 100%;
+        height: 200px;
+        border-radius:5px;
+        object-fit:cover;
+        -webkit-transition: all .3s ease-in-out;
+        -moz-transition: all .3s ease-in-out;
+        -o-transition: all .3s ease-in-out;
+        -ms-transition: all .3s ease-in-out;
+    }
+</style>
+{% endblock %}
+
 {% block footer %}
 <script>
     $(function () {
@@ -7,6 +38,21 @@
     });
 
     $(document).ready(function(){
+
+        $(".fancybox").fancybox({
+            openEffect: "none",
+            closeEffect: "none"
+        });
+
+        $(".zoom").hover(function(){
+
+            $(this).addClass('transition');
+        }, function(){
+
+            $(this).removeClass('transition');
+        });
+
+
         $("#formImg").validate({
             rules: {
                 title: {
@@ -22,33 +68,56 @@
 </script>
 {% endblock %}
 
+
 {% block body %}
-<div class="container" style="margin-top: 1rem; margin-bottom: 1rem;">
-    {% if records.errors is not empty %}
-    <div class="row justify-content-md-center">
-        <ul>
-            {% for error in records.errors %}
-            <li style="color:red">{{error}}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-    {% if images is not empty %}
-    <hr>
-        {% for image in images %}
-        <div class="row justify-content-md-center">
-                 <div class="hovereffect">
-                     <img src="../../../{{image.path}}" class="img-fluid" alt="{{image.title}}" data-toggle="tooltip" data-placement="top" title="{{image.title}}">
-                 </div>
-        </div><br>
-    <div class="row justify-content-md-center">
-        <form action="/image/delete" method="post">
-            <input type="hidden" name="id" value="{{image.id}}">
-            <input type="hidden" name="title" value="{{image.title}}">
-            <input type="submit" class="btn btn-danger" name="submit" value="Delete"  onclick="return confirm('Are you sure?');">
-        </form>
-    </div><hr>
+<br>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-md-center">
+        <li class="page-item">
+            <a class="page-link" href="/image/index/{{current - 1}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        {% for i in 1..pages %}
+        {% if i == current %}
+        <li class="page-item active"><a class="page-link" href="/image/index/{{i}}">{{ i }}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="/image/index/{{i}}">{{ i }}</a></li>
+        {% endif %}
         {% endfor %}
-    {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="/image/index/{{current + 1}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container page-top">
+    <div class="row">
+        {% if records.errors is not empty %}
+        <div class="row justify-content-md-center">
+            <ul>
+                {% for error in records.errors %}
+                <li style="color:red">{{error}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% for image in images %}
+
+        <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+            <a href="#" class="fancybox" rel="ligthbox">
+                <img  src="../../../{{image.path}}" class="zoom img-fluid"  alt="{{image.title}}" data-toggle="tooltip" data-placement="top" title="{{image.title}}">
+            </a>
+            <figcaption class="figure-caption">Title: {{image.title}} <br> User: {{image.email}}</figcaption>
+        </div>
+
+        {% endfor %}
+    </div>
 </div>
+
 {% endblock %}

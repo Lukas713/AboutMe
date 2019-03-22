@@ -11,6 +11,7 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Models\Images;
 use \App\Flash;
+use \App\Paginator;
 
 /* class for logged users only */
 class Image extends Authenticated
@@ -22,10 +23,41 @@ class Image extends Authenticated
      * @return void
      */
     public function index(){
-        $records = Images::getAll();
+        $this->paginator = $this->chechAndSetPagintor();
+        $offset = $this->checkRouteId();
+        $records = Images::getAll($offset);
         View::render('Image/index.html', [
-            "images" => $records
+            "images" => $records,
+            "pages" => $this->paginator->getPageNumber(),
+            "current" => $this->routeParams['id']
         ]);
+    }
+
+
+    protected function checkRouteId(){
+        if(isset($this->routeParams['id'])){
+
+            if($this->routeParams['id'] < 1){
+
+                $this->routeParams['id'] = 1;
+
+            }else if($this->routeParams['id'] > $this->paginator->getPageNumber()){
+                $this->routeParams['id'] = $this->paginator->getPageNumber();
+            }
+            $offset = $this->paginator->getOffset($this->routeParams['id']);
+        }else {
+            $this->routeParams['id'] = 1;
+            $offset = $this->paginator->getOffset();
+        }
+        return $offset;
+    }
+
+    protected function chechAndSetPagintor(){
+        if($this->paginator == null || $this->paginator->getModelClassName() != 'App\Models\Images'){
+            $model = new Images();
+            $this->paginator = new Paginator($model);
+        }
+        return $this->paginator;
     }
 
     /**

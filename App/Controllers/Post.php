@@ -17,26 +17,36 @@ class Post extends \Core\Controller {
      * @return void
      */
     public function index(){
+        $this->paginator = $this->chechAndSetPagintor();
+
         if(isset($this->routeParams['id'])){
 
             if($this->routeParams['id'] < 1){
 
                 $this->routeParams['id'] = 1;
 
-            }else if($this->routeParams['id'] > Paginator::getPageNumber()){
-                $this->routeParams['id'] = Paginator::getPageNumber();
+            }else if($this->routeParams['id'] > $this->paginator->getPageNumber()){
+                $this->routeParams['id'] = $this->paginator->getPageNumber();
             }
-
-            $offset = Paginator::getOffset($this->routeParams['id']);
+            $offset = $this->paginator->getOffset($this->routeParams['id']);
         }else {
-            $offset = Paginator::getOffset();
+            $offset = $this->paginator->getOffset();
         }
         $result = Posts::getAll($offset); //invoke Models action
         $result['current'] = $this->routeParams['id'] ?? 1;
         View::render('Post/index.html', [
-            'posts' => $result
+            'posts' => $result,
+            'pages' => $this->paginator->getPageNumber()
         ]);
+    }
 
+
+    protected function chechAndSetPagintor(){
+        if($this->paginator == null || $this->paginator->getModelClassName() != 'App\Models\Posts'){
+            $model = new Posts();
+            $this->paginator = new Paginator($model);
+        }
+        return $this->paginator;
     }
 
     /**

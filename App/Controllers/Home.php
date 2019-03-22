@@ -18,6 +18,10 @@ class Home extends \Core\Controller {
         View::render('Home/index.html');
     }
 
+    public function returner() {
+        echo $this->routeParams['id'];
+    }
+
 
     protected function before()
     {
