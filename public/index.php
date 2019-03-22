@@ -20,6 +20,7 @@ $router->add('', ['controller' => 'Home', 'action' => 'index']);
 $router->add('post', ['controller' => 'Posts', 'action' => 'index']);
 $router->add('{controller}/{action}');
 $router->add('{controller}/{action}/{id:\d+}');
+$router->add('{controller}/{action}/{id:[.]*}');
 $router->add('signup', ['controller' => 'signup', 'action' => 'index']);
 $router->add('login', ['controller' => 'login', 'action' => 'index']);
 $router->add('logout', ['controller' => 'login', 'action' => 'destroy']);
