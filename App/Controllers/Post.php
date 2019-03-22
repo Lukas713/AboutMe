@@ -19,19 +19,12 @@ class Post extends \Core\Controller {
     public function index(){
         $this->paginator = $this->chechAndSetPagintor();
 
-        if(isset($this->routeParams['id'])){
-
-            if($this->routeParams['id'] < 1){
-
-                $this->routeParams['id'] = 1;
-
-            }else if($this->routeParams['id'] > $this->paginator->getPageNumber()){
-                $this->routeParams['id'] = $this->paginator->getPageNumber();
-            }
-            $offset = $this->paginator->getOffset($this->routeParams['id']);
-        }else {
-            $offset = $this->paginator->getOffset();
+        if(!isset($this->routeParams['id']) || intval($this->routeParams['id']) < 1){
+            $this->redirect("/post/index/1");
+        }else if(intval($this->routeParams['id']) > $this->paginator->getPageNumber()){
+            $this->redirect("/post/index/" .  $this->paginator->getPageNumber());
         }
+        $offset = $this->checkRouteId(); 
         $result = Posts::getAll($offset); //invoke Models action
         $result['current'] = $this->routeParams['id'] ?? 1;
         View::render('Post/index.html', [
@@ -40,6 +33,10 @@ class Post extends \Core\Controller {
         ]);
     }
 
+    protected function checkRouteId(){
+        $offset = $this->paginator->getOffset($this->routeParams['id']);
+        return $offset;
+    }
 
     protected function chechAndSetPagintor(){
         if($this->paginator == null || $this->paginator->getModelClassName() != 'App\Models\Posts'){
