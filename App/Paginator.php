@@ -27,6 +27,9 @@ class Paginator
      */
     public function getPageNumber(){
         $pageNumber = $this->model->countPosts();
+        if($pageNumber->number < 1){
+            return 1;
+        }
         return ceil($pageNumber->number / $this->model->returnLimitPages());
     }
 
@@ -36,6 +39,11 @@ class Paginator
      * @return int
      */
     public function getOffset($page = 1){
+        if($page < 1){
+            $page = 1;
+        }else if($page > $this->model->returnLimitPages()){
+            $page = $this->model->returnLimitPages();
+        }
         $offset = ($page * $this->model->returnLimitPages()) - $this->model->returnLimitPages();
         return $offset;
     }

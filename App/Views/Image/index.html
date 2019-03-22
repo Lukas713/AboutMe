@@ -68,7 +68,6 @@
 </script>
 {% endblock %}
 
-
 {% block body %}
 <br>
 <nav aria-label="Page navigation example">
@@ -80,11 +79,11 @@
             </a>
         </li>
         {% for i in 1..pages %}
-        {% if i == current %}
-        <li class="page-item active"><a class="page-link" href="/image/index/{{i}}">{{ i }}</a></li>
-        {% else %}
-        <li class="page-item"><a class="page-link" href="/image/index/{{i}}">{{ i }}</a></li>
-        {% endif %}
+            {% if i == current %}
+                <li class="page-item active"><a class="page-link" href="/image/index/{{i}}">{{ i }}</a></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="/image/index/{{i}}">{{ i }}</a></li>
+            {% endif %}
         {% endfor %}
         <li class="page-item">
             <a class="page-link" href="/image/index/{{current + 1}}" aria-label="Next">
@@ -111,7 +110,7 @@
 
         <div class="col-lg-3 col-md-4 col-xs-6 thumb">
             <a href="#" class="fancybox" rel="ligthbox">
-                <img  src="../../../{{image.path}}" class="zoom img-fluid"  alt="{{image.title}}" data-toggle="tooltip" data-placement="top" title="{{image.title}}">
+                <img  src="../../../{{image.path}}" class="zoom img-fluid"  alt="{{image.title}}"  title="{{image.title}}">
             </a>
             <figcaption class="figure-caption">Title: {{image.title}} <br> User: {{image.email}}</figcaption>
         </div>

@@ -24,6 +24,15 @@ class Image extends Authenticated
      */
     public function index(){
         $this->paginator = $this->chechAndSetPagintor();
+
+        if(!isset($this->routeParams['id']) || intval($this->routeParams['id']) < 1){
+
+            $this->redirect("/image/index/1");
+
+        }else if(intval($this->routeParams['id']) > $this->paginator->getPageNumber()){
+
+            $this->redirect("/image/index/" . $this->paginator->getPageNumber());
+        }
         $offset = $this->checkRouteId();
         $records = Images::getAll($offset);
         View::render('Image/index.html', [
@@ -35,20 +44,7 @@ class Image extends Authenticated
 
 
     protected function checkRouteId(){
-        if(isset($this->routeParams['id'])){
-
-            if($this->routeParams['id'] < 1){
-
-                $this->routeParams['id'] = 1;
-
-            }else if($this->routeParams['id'] > $this->paginator->getPageNumber()){
-                $this->routeParams['id'] = $this->paginator->getPageNumber();
-            }
-            $offset = $this->paginator->getOffset($this->routeParams['id']);
-        }else {
-            $this->routeParams['id'] = 1;
-            $offset = $this->paginator->getOffset();
-        }
+        $offset = $this->paginator->getOffset($this->routeParams['id']);
         return $offset;
     }
 

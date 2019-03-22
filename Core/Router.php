@@ -80,7 +80,6 @@ class Router
      * @return void
      */
     public function dispatch($url){
-
         $url = $this->removeQueryStringVariable($url);
 
         if(!$this->match($url)){
