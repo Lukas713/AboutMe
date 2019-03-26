@@ -24,7 +24,7 @@ class Post extends \Core\Controller {
         }else if(intval($this->routeParams['id']) > $this->paginator->getPageNumber()){
             $this->redirect("/post/index/" .  $this->paginator->getPageNumber());
         }
-        $offset = $this->checkRouteId(); 
+        $offset = $this->checkRouteId();
         $result = Posts::getAll($offset); //invoke Models action
         $result['current'] = $this->routeParams['id'] ?? 1;
         View::render('Post/index.html', [

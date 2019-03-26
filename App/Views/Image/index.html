@@ -1,9 +1,6 @@
 {% extends 'base.html'%}
 
 {% block head %}
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
-<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-
 <style>
     body {
         background-color:#1d1d1d !important;;
@@ -32,40 +29,8 @@
 {% endblock %}
 
 {% block footer %}
-<script>
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
-
-    $(document).ready(function(){
-
-        $(".fancybox").fancybox({
-            openEffect: "none",
-            closeEffect: "none"
-        });
-
-        $(".zoom").hover(function(){
-
-            $(this).addClass('transition');
-        }, function(){
-
-            $(this).removeClass('transition');
-        });
-
-
-        $("#formImg").validate({
-            rules: {
-                title: {
-                    required: true
-                },
-                image: {
-                    required: true
-                }
-            },
-            errorClass: "is-invalid"
-        });
-    });
-</script>
+<script src="/js/node_modules/jquery.bighover/jquery.bighover.js"></script>
+<script src="/js/imageScript.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -110,7 +75,7 @@
 
         <div class="col-lg-3 col-md-4 col-xs-6 thumb">
             <a href="#" class="fancybox" rel="ligthbox">
-                <img  src="../../../{{image.path}}" class="zoom img-fluid"  alt="{{image.title}}"  title="{{image.title}}">
+                <img id="demo" src="../../../{{image.path}}" class="zoom img-fluid" alt="{{image.title}}"  title="{{image.title}}">
             </a>
             <figcaption class="figure-caption">Title: {{image.title}} <br> User: {{image.email}}</figcaption>
         </div>
