@@ -30,7 +30,41 @@
 
 {% block footer %}
 <script src="/js/node_modules/jquery.bighover/jquery.bighover.js"></script>
-<script src="/js/imageScript.js"></script>
+<script>
+
+    /**
+     * Javascript code for page that displays images
+     */
+    $(document).ready(function(){
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+
+        /**
+         * PLUGIN FOR ZOOMING IMAGES
+         */
+        $('.img-fluid').bighover({
+            width: 'auto',
+            height: 'auto'
+        });
+
+        /**
+         * PLUGIN FOR VALIDATING INPUT
+         */
+        $("#formImg").validate({
+            rules: {
+                title: {
+                    required: true
+                },
+                image: {
+                    required: true
+                }
+            },
+            errorClass: "is-invalid"
+        });
+    });
+</script>
 {% endblock %}
 
 {% block body %}
