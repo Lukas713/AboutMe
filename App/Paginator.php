@@ -25,8 +25,8 @@ class Paginator
      * get maximum number of pages
      * @return int
      */
-    public function getPageNumber(){
-        $pageNumber = $this->model->countPosts();
+    public function getPageNumber($id = null){
+        $pageNumber = $this->model->countPosts($id);
         if($pageNumber->number < 1){
             return 1;
         }

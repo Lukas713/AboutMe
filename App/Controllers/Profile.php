@@ -12,6 +12,7 @@ use App\Models\Users;
 use \Core\View;
 use \App\Models\Images;
 use \App\Flash;
+use \App;
 
 class Profile extends Authenticated
 {
@@ -25,7 +26,30 @@ class Profile extends Authenticated
     }
 
     public function album(){
-        View::render("Profile/album.html");
+        $this->paginator = $this->chechAndSetPagintor();
+        $email = explode(" - ", $_SESSION['userID']);
+
+        if(!isset($this->routeParams['id']) || intval($this->routeParams['id']) < 1){
+
+            $this->redirect("/profile/album/1");
+
+        }else if(intval($this->routeParams['id']) > $this->paginator->getPageNumber($email[0])){
+
+            $this->redirect("/profile/album/" . $this->paginator->getPageNumber($email[0]));
+        }
+        $offset = $this->paginator->getOffset($this->routeParams['id']);
+        $records = Images::usersImageOnly($offset);
+        View::render("Profile/album.html", [
+            "images" => $records
+        ]);
+    }
+
+    protected function chechAndSetPagintor(){
+        if($this->paginator == null || $this->paginator->getModelClassName() != 'App\Models\Images'){
+            $model = new Images();
+            $this->paginator = new App\Paginator($model);
+        }
+        return $this->paginator;
     }
 
     /**

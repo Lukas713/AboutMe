@@ -30,6 +30,24 @@ class Images extends \Core\Model
         }
     }
 
+    public static function usersImageOnly($offset = 0) {
+        $conn = static::connect();
+        $email = explode(" - ", $_SESSION['userID']);
+        $stmt = $conn->prepare("SELECT a.id, a.path, SUBSTRING_INDEX(a.title, '&', 1) as title, b.email
+                                          from images a inner join user b
+                                          on a.user = b.id
+                                          where b.email = :email
+                                          order by id desc
+                                          LIMIT :limit
+                                          OFFSET :offset");
+        $stmt->bindValue("email", $email[1], PDO::PARAM_STR);
+        $stmt->bindValue("limit", Config::LIMIT_IMAGES, PDO::PARAM_INT);
+        $stmt->bindValue("offset", $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return self::convertPath($result);
+    }
+
     /**
      * get all user images and pass them to controller
      *
@@ -189,9 +207,15 @@ class Images extends \Core\Model
         return true;
     }
 
-    public function countPosts(){
+    public function countPosts($id = null){
         $conn = static::connect();
-        $stmt = $conn->prepare("SELECT COUNT(*) as number FROM images");
+
+        if($id != null){
+            $stmt = $conn->prepare("SELECT COUNT(*) as number FROM images WHERE user = :user");
+            $stmt->bindValue("user", $id, PDO::PARAM_INT);
+        }else {
+            $stmt = $conn->prepare("SELECT COUNT(*) as number FROM images");
+        }
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
