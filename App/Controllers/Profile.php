@@ -29,9 +29,9 @@ class Profile extends Authenticated
         $this->paginator = $this->chechAndSetPagintor();
         $email = explode(" - ", $_SESSION['userID']);
 
-        if(!isset($this->routeParams['id']) || intval($this->routeParams['id']) < 1){
 
-            $this->redirect("/profile/album/1");
+        if(!isset($this->routeParams['id']) || intval($this->routeParams['id']) < 1){
+            $this->redirect("/profile/album/" . 1);
 
         }else if(intval($this->routeParams['id']) > $this->paginator->getPageNumber($email[0])){
 
@@ -40,7 +40,9 @@ class Profile extends Authenticated
         $offset = $this->paginator->getOffset($this->routeParams['id']);
         $records = Images::usersImageOnly($offset);
         View::render("Profile/album.html", [
-            "images" => $records
+            "images" => $records,
+            "pages" => $this->paginator->getPageNumber($email[0]),
+            "current" => $this->routeParams['id']
         ]);
     }
 
@@ -183,5 +185,9 @@ class Profile extends Authenticated
             $user_m->update();
             echo 'good job';
         }
+    }
+
+    public function remove(){
+        
     }
 }
