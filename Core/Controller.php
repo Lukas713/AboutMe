@@ -22,6 +22,11 @@ abstract class Controller
     protected $paginator;
 
     /**
+     * @model interface
+     */
+    protected $models;
+
+    /**
      * parameters from matched route
      */
     protected $routeParams = [];
@@ -32,10 +37,11 @@ abstract class Controller
      * @param array $routeParams, Parameters from the root
      * @return void
      */
-    public function __construct($routeParams, Paginator $paginator = null)
+    public function __construct($routeParams, Paginator $paginator = null, Model $models = null)
     {
         $this->paginator = $paginator;
         $this->routeParams = $routeParams;
+        $this->models = $models;
     }
 
     /**
@@ -87,9 +93,10 @@ abstract class Controller
 
     /**
      *  checks if paginator is null
-     *  returns object
+     *  @param string, name of the class
+     *  @returns object
      */
-    protected function chechAndSetPagintor(){
+    protected function chechAndSetModel($model = null){
 
     }
 

@@ -23,7 +23,7 @@ class Image extends Authenticated
      * @return void
      */
     public function index(){
-        $this->paginator = $this->chechAndSetPagintor();
+        $this->paginator = $this->chechAndSetModel('App\Models\Images');
 
         if(!isset($this->routeParams['id']) || intval($this->routeParams['id']) < 1){
 
@@ -48,9 +48,9 @@ class Image extends Authenticated
         return $offset;
     }
 
-    protected function chechAndSetPagintor(){
-        if($this->paginator == null || $this->paginator->getModelClassName() != 'App\Models\Images'){
-            $model = new Images();
+    protected function chechAndSetModel($argument = null){
+        if($this->paginator == null || $this->paginator->getModelClassName() != "App\Paginator"){
+            $model = new $argument;
             $this->paginator = new Paginator($model);
         }
         return $this->paginator;

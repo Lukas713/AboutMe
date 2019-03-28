@@ -25,10 +25,14 @@ class Profile extends Authenticated
         View::render("Profile/index.html");
     }
 
+    /**
+     * checks id fro url, gets records and renders view
+     *
+     * @return void
+     */
     public function album(){
-        $this->paginator = $this->chechAndSetPagintor();
+        $this->paginator = $this->chechAndSetModel('App\Models\Images');
         $email = explode(" - ", $_SESSION['userID']);
-
 
         if(!isset($this->routeParams['id']) || intval($this->routeParams['id']) < 1){
             $this->redirect("/profile/album/" . 1);
@@ -46,9 +50,11 @@ class Profile extends Authenticated
         ]);
     }
 
-    protected function chechAndSetPagintor(){
-        if($this->paginator == null || $this->paginator->getModelClassName() != 'App\Models\Images'){
-            $model = new Images();
+
+
+    protected function chechAndSetModel($argument = null){
+        if($this->paginator == null || $this->paginator->getModelClassName() != "App\Paginator"){
+            $model = new $argument;
             $this->paginator = new App\Paginator($model);
         }
         return $this->paginator;
@@ -188,6 +194,13 @@ class Profile extends Authenticated
     }
 
     public function remove(){
-        
+
+        if(!isset($_POST['id'])){
+            $this->redirect("/profile/album");
+        }
+        $image_m = new Images($_POST);
+        $image_m->delete();
+
+        echo "good job";
     }
 }

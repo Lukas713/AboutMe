@@ -37,6 +37,26 @@
             width: 'auto',
             height: 'auto'
         });
+
+        removeImage();
+
+        function removeImage(){
+
+            $("#remove").click(function(){
+                var x = $("#remove").val();
+
+                $.ajax({
+                    type: "post",
+                    url: "/profile/remove",
+                    data: "id=" + x,
+                    success: function (serverReturn) {
+                        if(serverReturn == "good job"){
+                            $("#" + x).empty();
+                        }
+                    }
+                });
+            });
+        }
     </script>
 {% endblock %}
 
@@ -69,16 +89,16 @@
 
 
     <div class="container page-top">
-        <div class="row">
+        <div class="row" id="mainRow">
         {% for image in images %}
-            <div class="col-lg-3 col-md-4 col-xs-6 thumb">
-                <a href="#" class="fancybox" rel="ligthbox">
-                    <img id="demo" src="../../../{{image.path}}" class="zoom img-fluid" alt="{{image.title}}"  title="{{image.title}}">
-                </a>
-                <figcaption class="figure-caption">Title: {{image.title}} <br> User: {{image.email}}</figcaption>
-                <hr>
-                <button type="button" class="btn btn-danger" onclick="return confirm('Are you sure?');">Remove</button>
-            </div>
+                <div class="col-lg-3 col-md-4 col-xs-6 thumb" id="{{image.id}}">
+                    <a href="#" class="fancybox" rel="ligthbox">
+                        <img id="demo" src="../../../{{image.path}}" class="zoom img-fluid" alt="{{image.title}}"  title="{{image.title}}">
+                    </a>
+                    <figcaption class="figure-caption">Title: {{image.title}}</figcaption>
+                    <hr>
+                    <button class="btn btn-danger" id="remove" onclick="return confirm('Are you sure?');" value="{{image.id}}">Remove</button>
+                </div>
         {% endfor %}
         </div>
     </div>
